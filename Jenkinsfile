@@ -13,7 +13,7 @@ node {
 		echo "job1"
 		def yaml = [:]
 		script {
-			yaml = readTYaml file:config.yml
+			yaml = readYaml file:config.yml
 		}
 		echo yaml
 	}
