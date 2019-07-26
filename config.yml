@@ -1,0 +1,14 @@
+config:
+  subprojects: ./testset
+  env:
+    - env_A=0
+    - env_B=1
+
+stages:
+
+stage:
+  - name: job1
+    node: master
+    script:
+     - sh: make
+
