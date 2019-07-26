@@ -36,8 +36,9 @@ def __mk_parallel(def parallel_list, def stage_list)
     }
     return parallel
 }
-
-stage_list = [job1:[node:"master", sh:"make", unstash:"projects"], job2:[node:"master", sh:"make"]]
-parallel_list = ["job1", "job2"]
-
-__mk_parallel(parallel_list, stage_list)
+//
+//stage_list = [job1:[node:"master", sh:"make", unstash:"projects"], job2:[node:"master", sh:"make"]]
+//parallel_list = ["job1", "job2"]
+//
+//__mk_parallel(parallel_list, stage_list)
+//

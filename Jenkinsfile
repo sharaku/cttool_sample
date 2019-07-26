@@ -1,5 +1,7 @@
 #!groovy
 
+import libcitool.groovy
+
 def err_msg = ""
 
 node {
@@ -9,7 +11,10 @@ node {
 
 	stage('job1'){
 		echo "job1"
-		yaml = readTYaml file:config.yml
+		def yaml = [:]
+		script {
+			yaml = readTYaml file:config.yml
+		}
 		echo yaml
 	}
 
