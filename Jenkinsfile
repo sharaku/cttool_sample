@@ -11,9 +11,11 @@ node {
 
 	stage('job1'){
 		echo "job1"
-		def yaml = [:]
+		def yaml
 		script {
-			yaml = readYaml file:config.yml
+			// 設定ファイルを読み込む
+			// Pipeline Utility Steps Pluginの関数を使う
+			yaml = readYaml(file: 'config.yml')
 		}
 		echo yaml
 	}
