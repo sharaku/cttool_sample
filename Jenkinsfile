@@ -3,8 +3,14 @@
 def err_msg = ""
 
 node {
+	stage('onetime setup'){
+		echo "onetime setup"
+	}
+
 	stage('job1'){
 		echo "job1"
+		yaml = readTYaml file:config.yml
+		echo yaml
 	}
 
 	stage('job2'){
