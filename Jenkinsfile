@@ -1,6 +1,6 @@
 #!groovy
 
-load 'libcitool.groovy'
+//load 'libcitool.groovy'
 
 def err_msg = ""
 
