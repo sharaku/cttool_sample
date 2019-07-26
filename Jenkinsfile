@@ -1,18 +1,18 @@
-pipeline {
-	agent any
+#!groovy
 
-	stages {
-		stage('job1'){
-			echo "job1"
-		}
+def err_msg = ""
 
-		stage('job2'){
-			echo "job2"
-		}
+node {
+	stage('job1'){
+		echo "job1"
+	}
 
-		stage('job3'){
-			echo "job3"
-		}
+	stage('job2'){
+		echo "job2"
+	}
+
+	stage('job3'){
+		echo "job3"
 	}
 }
 
