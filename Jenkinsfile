@@ -17,7 +17,7 @@ node {
 			// Pipeline Utility Steps Plugin‚ÌŠÖ”‚ğg‚¤
 			yaml = readYaml(file: 'config.yml')
 		}
-		echo yaml
+		echo "$yaml"
 	}
 
 	stage('job2'){
