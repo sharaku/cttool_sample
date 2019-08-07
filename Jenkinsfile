@@ -54,7 +54,7 @@ def __exec_single_stage(def ow_env, def stage_param)
 				withEnv(__env) {
 					__exec_script(stage_param.script)
 				}
-			else {
+			} else {
 				__exec_script(stage_param.script)
 			}
 		}
@@ -187,7 +187,7 @@ node {
 				withEnv(__env) {
 					__exec_stages(__stages, yaml.stage)
 				}
-			else {
+			} else {
 				__exec_stages(__stages, yaml.stage)
 			}
 
