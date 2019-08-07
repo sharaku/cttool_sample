@@ -6,7 +6,7 @@ config:
   junit:
     allowEmptyResults: true
     keepLongStdio: true
-    testResults: 'result/*.xml'
+    testResults: '*.xml'
 
 stages:
  - job1
@@ -19,12 +19,12 @@ stage:
      - sh: echo "job1 env_A=${env_A} env_C=${env_C} env_D=${env_D}"
      - sh: ls -al
      - sh: pwd
-     - sh: sh ./mkresult result/junit1.xml
+     - sh: sh ./mkresult junit1.xml
      - echo: "echo job1"
     env:
      - env_C="C"
      - env_D="D"
-    result: 'result/*.xml'
+    result: '*.xml'
 
   job2:
     node: master
@@ -32,9 +32,9 @@ stage:
      - sh: echo "job2"
      - sh: ls -al
      - sh: pwd
-     - sh: sh ./mkresult result/junit2.xml
+     - sh: sh ./mkresult junit2.xml
      - sh: echo "job2 env_C=${env_C} env_D=${env_D}"
-    result: 'result/*.xml'
+    result: '*.xml'
 
   para_job1:
     parallel:
