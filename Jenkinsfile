@@ -51,8 +51,21 @@ def __exec_parallel(def stage_name, def stage_list, def stage_param)
 	stage_param.parallel.each { __line ->
 		__parallel[__line] = {
 			stage(__line) {
-				steps {
-					__exec_stage(__line, stage_list[__line])
+//				steps {
+//					__exec_stage(__line, stage_list[__line])
+//				}
+				node (stage_list[__line].node) {
+					if (stage_list[__line].script != null) {
+						stage_list[__line].script.each { __script ->
+							if (__script.sh != null) {
+								sh __script.sh
+							} else if (__script.echo  != null) {
+								echo __script.echo
+							} else if (__script.powershell  != null) {
+								powershell __script.sh
+							}
+						}
+					}
 				}
 			}
 		}
@@ -79,12 +92,9 @@ def __exec_stages(def stages, def stage_list)
 }
 
 node {
-	stage('onetime setup'){
-		checkout scm
-		echo "onetime setup"
-	}
-
 	def yaml
+
+	checkout scm
 	script {
 		// 設定ファイルを読み込む
 		// Pipeline Utility Steps Pluginの関数を使う
@@ -98,10 +108,6 @@ node {
 		} else {
 			__exec_stages(yaml.stages, yaml.stage)
 		}
-	}
-
-	stage('onetime teardown'){
-		echo "onetime teardown"
 	}
 }
 
