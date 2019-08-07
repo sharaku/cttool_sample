@@ -35,11 +35,15 @@ def __exec_single_stage(def stage_name, def stage_param)
 def __exec_parallel(def stage_name, def stage_list, def stage_param)
 {
 	def __parallel = [:]
+
+	echo "debug: __exec_parallel($stage_name, $stage_list, $stage_param)"
+
 	stage_param.parallel.each { __line ->
 		__parallel[__line] = {
 			__exec_stage(__line, stage_list[__line])
 		}
 	}
+	echo "debug: __exec_parallel($__parallel)"
 
 	stage(stage_name) {
 		parallel(__parallel)
@@ -51,6 +55,7 @@ def __exec_parallel(def stage_name, def stage_list, def stage_param)
 def __exec_stage(def stage_name, def stage_list, def stage_param)
 {
 	if (stage_param.parallel != null) {
+		echo "debug: parallel"
 		__exec_parallel(__line, stage_list, stage_param)
 	} else {
 		__exec_single_stage(stage_name, stage_param)
