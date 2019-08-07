@@ -136,7 +136,7 @@ node {
 			if (yaml.config.env != null) {
 				__env = yaml.config.env
 			}
-			if (params.env != null) {
+			if (params.env != null && params.env != "") {
 				def __ow_env = params.env.split("\n")
 				__ow_env.each { line ->
 					__env += line
@@ -157,6 +157,7 @@ node {
 			}
 
 			withEnv(__env) {
+				echo "$__stages"
 				__exec_stages(__stages, yaml.stage)
 			}
 		}
