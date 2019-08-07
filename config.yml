@@ -5,10 +5,9 @@ config:
     - env_B=1
 
 stages:
- - para_job1
  - job1
  - job2
- - para_job2
+ - para_job1
 
 stage:
   job1:
@@ -18,6 +17,7 @@ stage:
      - sh: ls -al
      - sh: pwd
      - echo: "echo job1"
+
   job2:
     node: master
     script:
@@ -25,10 +25,12 @@ stage:
      - sh: ls -al
      - sh: pwd
      - echo: "echo job1"
+
   para_job1:
     parallel:
      - job1
      - job2
+
   para_job2:
     parallel:
      - para_job1

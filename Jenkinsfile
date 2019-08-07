@@ -15,6 +15,16 @@ def __exec_single_stage(def stage_param)
 	}
 
 	node (_node) {
+		// unstashが設定されている場合は全部実行する。
+		deleteDir()
+		if (stage_param.unstash != null) {
+			stage_param.stash.each { __stash ->
+				unstash __stash
+			}
+		} else {
+			unstash 'initialize'
+		}
+
 		if (stage_param.script != null) {
 			stage_param.script.each { __script ->
 				if (__script.sh != null) {
@@ -26,6 +36,15 @@ def __exec_single_stage(def stage_param)
 				}
 			}
 		}
+
+		// stashはそのまま渡す。
+		// よって、name, excludesを設定すること。
+		if (stage_param.stash != null) {
+			stage_param.stash.each { __stash ->
+				stash __stash
+			}
+		}
+
 	}
 }
 
@@ -78,7 +97,11 @@ def __exec_stages(def stages, def stage_list)
 node {
 	def yaml
 
+	// clean checkoutする
+	deleteDir()
 	checkout scm
+	stash name: 'initialize'
+
 	script {
 		// 設定ファイルを読み込む
 		// Pipeline Utility Steps Pluginの関数を使う
@@ -86,12 +109,14 @@ node {
 		echo "$yaml"
 
 		// 環境変数定義がある場合は環境変数を設定する。
-		if (yaml.config.env) {
-			withEnv(yaml.config.env) {
+		timestamps {
+			if (yaml.config.env) {
+				withEnv(yaml.config.env) {
+					__exec_stages(yaml.stages, yaml.stage)
+				}
+			} else {
 				__exec_stages(yaml.stages, yaml.stage)
 			}
-		} else {
-			__exec_stages(yaml.stages, yaml.stage)
 		}
 	}
 }
