@@ -203,6 +203,10 @@ node {
 			}
 
 		}
+
+		if (yaml.config.junit != null) {
+			junit yaml.config.junit
+		}
 	}
 }
 
