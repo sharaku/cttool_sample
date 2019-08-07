@@ -14,8 +14,14 @@ stage:
     node: master
     script:
      - sh: echo "job1"
+     - sh: ls -al
+     - sh: pwd
+     - echo: "echo job1"
   job2:
     node: master
     script:
      - sh: echo "job2"
+     - sh: ls -al
+     - sh: pwd
+     - echo: "echo job1"
 
