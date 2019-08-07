@@ -2,24 +2,8 @@
 
 //load 'libcitool.groovy'
 
-def err_msg = ""
-def __mk_parallel(def parallel_list, def stage_list)
-{
-	def parallel = [:]
-	parallel_list.each { oneline ->
-		echo oneline
-//		parallel[oneline] = {
-//			node (stage_list[oneline].node){
-//				__exec_stage(stage_list[oneline])
-//			}
-//		}
-	}
-	return parallel
-}
-
 def __exec_single_stage(def stage_name, def stage_param)
 {
-	echo "debug: __exec_single_stage($stage_param)"
 	def _node
 
 	// 使用するnodeを決定する。
@@ -48,28 +32,39 @@ def __exec_single_stage(def stage_name, def stage_param)
 }
 
 
-// パラメータに沿ってstageを実行する
-def __exec_stage(def stage_name, def stage_param)
+def __exec_parallel(def stage_name, def stage_list, def stage_param)
 {
-	echo "debug: __exec_stage($stage_param)"
+	def __parallel = [:]
+	stage_param.parallel.each { __line ->
+		__parallel[__line] = {
+			__exec_stage(__line, stage_list[__line])
+		}
+	}
+
+	stage(stage_name) {
+		parallel(__parallel)
+	}
+}
+
+
+// パラメータに沿ってstageを実行する
+def __exec_stage(def stage_name, def stage_list, def stage_param)
+{
 	if (stage_param.parallel != null) {
-		echo "${stage_param.name} is parallel."
+		__exec_parallel(__line, stage_list, stage_param)
 	} else {
 		__exec_single_stage(stage_name, stage_param)
 	}
 }
 
-
 def __exec_stages(def stages, def stage_list)
 {
-	echo "debug: __exec_stages($stages, $stage_list), env_A=$env_A env_B=$env_B"
 	stages.each { __line ->
-		echo "debug: __line=$__line"
 		if (stage_list[__line] == null) {
-			echo "${__line} is not found."
+			// 指定されたjobはありませんでした。
+			echo "${stage_list[__line]} is not found."
 		} else {
-			echo "debug: stage_list[$__line] = ${stage_list[__line]}"
-			__exec_stage(__line, stage_list[__line])
+			__exec_stage(__line, stage_list, stage_list[__line])
 		}
 	}
 }

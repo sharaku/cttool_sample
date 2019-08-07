@@ -24,4 +24,7 @@ stage:
      - sh: ls -al
      - sh: pwd
      - echo: "echo job1"
-
+  para_job1:
+    parallel:
+     - job1
+     - job2
