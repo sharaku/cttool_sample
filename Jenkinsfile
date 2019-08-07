@@ -74,6 +74,7 @@ def __exec_stages(def stages, def stage_list)
 	}
 }
 
+// ここからがエントリ。
 node {
 	def yaml
 
@@ -84,6 +85,7 @@ node {
 		yaml = readYaml(file: 'config.yml')
 		echo "$yaml"
 
+		// 環境変数定義がある場合は環境変数を設定する。
 		if (yaml.config.env) {
 			withEnv(yaml.config.env) {
 				__exec_stages(yaml.stages, yaml.stage)

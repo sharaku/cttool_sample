@@ -6,6 +6,9 @@ config:
 
 stages:
  - para_job1
+ - job1
+ - job2
+ - para_job2
 
 stage:
   job1:
@@ -26,3 +29,7 @@ stage:
     parallel:
      - job1
      - job2
+  para_job2:
+    parallel:
+     - para_job1
+     - para_job1
