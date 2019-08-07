@@ -106,6 +106,24 @@ def __exec_stages(def stages, def stage_list)
 	}
 }
 
+
+def __exec_env_overwrite(def stages, def stage_list)
+{
+	if (params.env) {
+		def __env = [:]
+		def env_list = params.env.split("\n")
+		env_list.each { val ->
+			def val_spl = cmds.split("=")
+			__env[val_spl[0]] = val_spl[1]
+		}
+
+		withEnv(__env) {
+			__exec_stages(yaml.stages, yaml.stage)
+		}
+	}
+	__exec_stages(yaml.stages, yaml.stage)
+}
+
 // ‚±‚±‚©‚ç‚ªƒGƒ“ƒgƒŠB
 node {
 	def yaml
@@ -125,10 +143,10 @@ node {
 		timestamps {
 			if (yaml.config.env != null) {
 				withEnv(yaml.config.env) {
-					__exec_stages(yaml.stages, yaml.stage)
+					__exec_env_overwrite(yaml.stages, yaml.stage)
 				}
 			} else {
-				__exec_stages(yaml.stages, yaml.stage)
+				__exec_env_overwrite(yaml.stages, yaml.stage)
 			}
 		}
 	}
