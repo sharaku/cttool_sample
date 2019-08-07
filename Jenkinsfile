@@ -17,7 +17,7 @@ def __mk_parallel(def parallel_list, def stage_list)
 	return parallel
 }
 
-def __exec_single_stage(def stage_param)
+def __exec_single_stage(def stage_name, def stage_param)
 {
 	echo "debug: __exec_single_stage($stage_param)"
 	def _node
@@ -28,9 +28,11 @@ def __exec_single_stage(def stage_param)
 	}
 
 	node (_node){
-		stage_param.script.each { __script ->
-			if (__script.sh != null) {
-				sh __script.sh
+		stage(stage_name){
+			stage_param.script.each { __script ->
+				if (__script.sh != null) {
+					sh __script.sh
+				}
 			}
 		}
 	}
@@ -38,13 +40,13 @@ def __exec_single_stage(def stage_param)
 
 
 // パラメータに沿ってstageを実行する
-def __exec_stage(def stage_param)
+def __exec_stage(def stage_name, def stage_param)
 {
 	echo "debug: __exec_stage($stage_param)"
 	if (stage_param.parallel != null) {
 		echo "${stage_param.name} is parallel."
 	} else {
-		__exec_single_stage(stage_param)
+		__exec_single_stage(stage_name, stage_param)
 	}
 }
 
@@ -58,7 +60,7 @@ def __exec_stages(def stages, def stage_list)
 			echo "${__line} is not found."
 		} else {
 			echo "debug: stage_list[$__line] = ${stage_list[__line]}"
-			__exec_stage(stage_list[__line])
+			__exec_stage(__line, stage_list[__line])
 		}
 	}
 }
@@ -69,20 +71,13 @@ node {
 		echo "onetime setup"
 	}
 
-	stage('job1'){
-		echo "job1"
-		def yaml
-		script {
-			// 設定ファイルを読み込む
-			// Pipeline Utility Steps Pluginの関数を使う
-			yaml = readYaml(file: 'config.yml')
-			echo "$yaml"
-			__exec_stages(yaml.stages, yaml.stage)
-		}
-	}
-
-	stage('job2'){
-		echo "job2"
+	def yaml
+	script {
+		// 設定ファイルを読み込む
+		// Pipeline Utility Steps Pluginの関数を使う
+		yaml = readYaml(file: 'config.yml')
+		echo "$yaml"
+		__exec_stages(yaml.stages, yaml.stage)
 	}
 
 	stage('onetime teardown'){

@@ -6,6 +6,8 @@ config:
 
 stages:
  - job1
+ - job2
+ - job1
 
 stage:
   job1:
