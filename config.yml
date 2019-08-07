@@ -8,7 +8,7 @@ stages:
  - job1
 
 stage:
-  - name: job1
+  job1:
     node: master
     script:
      - sh: make
