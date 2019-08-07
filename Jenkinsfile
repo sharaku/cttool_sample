@@ -128,7 +128,10 @@ node {
 				__env = yaml.config.env
 			}
 			if (params.env != null) {
-				__env += params.env.split("\n")
+				def __ow_env = params.env.split("\n")
+				__ow_env.each { line ->
+					__env += line
+				}
 			}
 			echo "$__env"
 			withEnv(__env) {
