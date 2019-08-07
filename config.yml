@@ -14,9 +14,12 @@ stage:
     node: master
     script:
      - sh: echo "job1"
-     - sh: ls -al
+     - sh: ls -al ${env_C} ${env_D}
      - sh: pwd
      - echo: "echo job1"
+    env:
+    - env_C="env_C"
+    - env_D="env_D"
 
   job2:
     node: master

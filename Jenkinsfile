@@ -1,6 +1,19 @@
 #!groovy
 
-//load 'libcitool.groovy'
+def __exec_script(def script)
+{
+	if (script != null) {
+		script.each { __script ->
+			if (__script.sh != null) {
+				sh __script.sh
+			} else if (__script.echo  != null) {
+				echo __script.echo
+			} else if (__script.powershell  != null) {
+				powershell __script.sh
+			}
+		}
+	}
+}
 
 def __exec_single_stage(def stage_param)
 {
@@ -25,15 +38,16 @@ def __exec_single_stage(def stage_param)
 			unstash 'initialize'
 		}
 
+		// スクリプトがなければ何もしない。
 		if (stage_param.script != null) {
-			stage_param.script.each { __script ->
-				if (__script.sh != null) {
-					sh __script.sh
-				} else if (__script.echo  != null) {
-					echo __script.echo
-				} else if (__script.powershell  != null) {
-					powershell __script.sh
+			// 環境変数定義があれば、環境変数を設定してから、
+			// shellを実行していく
+			if (stage_param.env != null) {
+				withEnv(stage_param.env) {
+					__exec_script(stage_param.script)
 				}
+			} else {
+				__exec_script(stage_param.script)
 			}
 		}
 
@@ -44,7 +58,6 @@ def __exec_single_stage(def stage_param)
 				stash __stash
 			}
 		}
-
 	}
 }
 
@@ -110,7 +123,7 @@ node {
 
 		// 環境変数定義がある場合は環境変数を設定する。
 		timestamps {
-			if (yaml.config.env) {
+			if (yaml.config.env != null) {
 				withEnv(yaml.config.env) {
 					__exec_stages(yaml.stages, yaml.stage)
 				}
@@ -120,5 +133,4 @@ node {
 		}
 	}
 }
-
 
