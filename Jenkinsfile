@@ -49,13 +49,15 @@ def __exec_stage(def stage_param)
 }
 
 
-def __stages(def stages, def stage_list)
+def __exec_stages(def stages, def stage_list)
 {
-	echo "debug: __stages($stages, $stage_list)"
+	echo "debug: __exec_stages($stages, $stage_list)"
 	stages.each { __line ->
+		echo "debug: __line=$__line"
 		if (stage_list[__line] == null) {
 			echo "${__line} is not found."
 		} else {
+			echo "debug: stage_list[$__line] = ${stage_list[__line]}"
 			__exec_stage(stage_list[__line])
 		}
 	}
@@ -75,7 +77,7 @@ node {
 			// Pipeline Utility Steps Plugin‚ÌŠÖ”‚ğg‚¤
 			yaml = readYaml(file: 'config.yml')
 			echo "$yaml"
-			__stages(yaml.stages, yaml.stage)
+			__exec_stages(yaml.stages, yaml.stage)
 		}
 	}
 
