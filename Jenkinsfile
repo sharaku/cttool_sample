@@ -18,7 +18,6 @@ def __exec_script(def script)
 def __exec_single_stage(def stage_param)
 {
 	def _node
-	def _env = ""
 
 	// 使用するnodeを決定する。
 	// nodeが指定されていない場合は、masterを使用する。
@@ -41,13 +40,15 @@ def __exec_single_stage(def stage_param)
 
 		// スクリプトがなければ何もしない。
 		if (stage_param.script != null) {
-
+			def __env = ""
 			// 環境変数定義があれば、環境変数を設定してから、
 			// shellを実行していく
 			if (stage_param.env != null) {
-				_env = stage_param.env
-			}
-			withEnv(_env) {
+				__env = stage_param.env
+				withEnv(__env) {
+					__exec_script(stage_param.script)
+				}
+			} else {
 				__exec_script(stage_param.script)
 			}
 		}
@@ -154,7 +155,6 @@ node {
 			}
 
 			withEnv(__env) {
-				echo "$__stages"
 				__exec_stages(__stages, yaml.stage)
 			}
 		}
