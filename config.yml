@@ -13,7 +13,7 @@ stage:
   job1:
     node: master
     script:
-     - sh: echo "job1 env_C=${env_C} env_D=${env_D}"
+     - sh: echo "job1 env_A=${env_A} env_C=${env_C} env_D=${env_D}"
      - sh: ls -al
      - sh: pwd
      - echo: "echo job1"

@@ -133,7 +133,7 @@ node {
 					__env += line
 				}
 			}
-			echo "$__env"
+
 			withEnv(__env) {
 				__exec_stages(yaml.stages, yaml.stage)
 			}
