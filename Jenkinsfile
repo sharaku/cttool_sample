@@ -149,12 +149,12 @@ node {
 			if (yaml.stages != null) {
 				__stages = yaml.stages
 			}
-			if (params.stages != null && params.stages != "") {
-				def __ow_stages = params.stages.split("\n")
-				__ow_stages.each { line ->
-					__stages += line
-				}
-			}
+//			if (params.stages != null && params.stages != "") {
+//				def __ow_stages = params.stages.split("\n")
+//				__ow_stages.each { line ->
+//					__stages += line
+//				}
+//			}
 
 			withEnv(__env) {
 				echo "$__stages"
