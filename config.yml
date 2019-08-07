@@ -5,9 +5,7 @@ config:
     - env_B=1
 
 stages:
- - job1
- - job2
- - job1
+ - para_job1
 
 stage:
   job1:
