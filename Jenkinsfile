@@ -1,5 +1,9 @@
 #!groovy
 
+
+// ---------------------------------------------------------------------
+// スクリプトを実行する。
+// ---------------------------------------------------------------------
 def __exec_script(def script)
 {
 	if (script != null) {
@@ -15,6 +19,10 @@ def __exec_script(def script)
 	}
 }
 
+
+// ---------------------------------------------------------------------
+// 1つのstageを実行する。
+// ---------------------------------------------------------------------
 def __exec_single_stage(def ow_env, def stage_param)
 {
 	def _node
@@ -70,12 +78,12 @@ def __exec_single_stage(def ow_env, def stage_param)
 }
 
 
-// parallel操作を行う。
+// ---------------------------------------------------------------------
+// 1つのstage（parallel）を実行する。
+// ---------------------------------------------------------------------
 def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 {
 	def __parallel = [:]
-
-	echo "debug: __exec_parallel($stage_name, $stage_list, $stage_param)"
 
 	stage_param.parallel.each { __line ->
 		__parallel[__line] = {
@@ -88,15 +96,18 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 			}
 		}
 	}
-	echo "debug: parallel($__parallel)"
 
 	stage(stage_name) {
 		parallel(__parallel)
 	}
 }
 
+
+// ---------------------------------------------------------------------
+// stagesを実行する。
+// ---------------------------------------------------------------------
 // 行は次のフォーマットとする
-// {jobname} {env:xxx=xxx,xxx=xxx}
+// {jobname} [env:xxx=xxx,xxx=xxx]
 def __mk_env(def list)
 {
 	def __ow_env=[]
