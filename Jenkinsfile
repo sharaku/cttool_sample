@@ -106,20 +106,6 @@ def __exec_stages(def stages, def stage_list)
 	}
 }
 
-
-def __exec_env_overwrite(def stages, def stage_list)
-{
-	if (params.env) {
-		def __env = params.env.split("\n")
-
-		echo "env=${__env}"
-		withEnv(__env) {
-			__exec_stages(stages, stage_list)
-		}
-	}
-	__exec_stages(stages, stage_list)
-}
-
 // ここからがエントリ。
 node {
 	def yaml
@@ -137,12 +123,13 @@ node {
 
 		// 環境変数定義がある場合は環境変数を設定する。
 		timestamps {
+			def __env = ""
 			if (yaml.config.env != null) {
-				withEnv(yaml.config.env) {
-					__exec_env_overwrite(yaml.stages, yaml.stage)
-				}
-			} else {
-				__exec_env_overwrite(yaml.stages, yaml.stage)
+				__env = yaml.config.env
+				echo "$__env"
+			}
+			withEnv(__env) {
+				__exec_stages(yaml.stages, yaml.stage)
 			}
 		}
 	}
