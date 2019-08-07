@@ -91,23 +91,21 @@ def __exec_stages(def stages, def stage_list)
 	}
 }
 
-node {
-	def yaml
+def yaml
 
-	checkout scm
-	script {
-		// 設定ファイルを読み込む
-		// Pipeline Utility Steps Pluginの関数を使う
-		yaml = readYaml(file: 'config.yml')
-		echo "$yaml"
+checkout scm
+script {
+	// 設定ファイルを読み込む
+	// Pipeline Utility Steps Pluginの関数を使う
+	yaml = readYaml(file: 'config.yml')
+	echo "$yaml"
 
-		if (yaml.config.env) {
-			withEnv(yaml.config.env) {
-				__exec_stages(yaml.stages, yaml.stage)
-			}
-		} else {
+	if (yaml.config.env) {
+		withEnv(yaml.config.env) {
 			__exec_stages(yaml.stages, yaml.stage)
 		}
+	} else {
+		__exec_stages(yaml.stages, yaml.stage)
 	}
 }
 
