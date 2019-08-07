@@ -23,7 +23,7 @@ def __exec_script(def script)
 // ---------------------------------------------------------------------
 // 1つのstageを実行する。
 // ---------------------------------------------------------------------
-def __exec_single_stage(def stage_name, def ow_env, def stage_param)
+def __exec_scripts(def stage_name, def ow_env, def stage_param)
 {
 	def _node
 
@@ -83,6 +83,15 @@ def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 	}
 }
 
+
+
+// ---------------------------------------------------------------------
+// 1つのスクリプトの塊を実行する。
+// ---------------------------------------------------------------------
+def __exec_single_stage(def stage_name, def ow_env, def stage_param)
+{
+	__exec_scripts(stage_name, ow_env, stage_param)
+}
 
 // ---------------------------------------------------------------------
 // 1つのstage（parallel）を実行する。
