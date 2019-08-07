@@ -40,17 +40,13 @@ def __exec_single_stage(def stage_param)
 
 		// スクリプトがなければ何もしない。
 		if (stage_param.script != null) {
-			def __env = ""
-
 			// 環境変数定義があれば、環境変数を設定してから、
 			// shellを実行していく
-			// 上書き用の環境変数定義があれば設定する。
 			if (stage_param.env != null) {
-				__env = stage_param.env
-			}
-
-			// スクリプトを実行する。
-			withEnv(__env) {
+				withEnv(stage_param.env) {
+					__exec_script(stage_param.script)
+				}
+			} else {
 				__exec_script(stage_param.script)
 			}
 		}
@@ -110,9 +106,7 @@ def __exec_stages(def stages, def stage_list)
 	}
 }
 
-// *********************************************************************
 // ここからがエントリ。
-// *********************************************************************
 node {
 	def yaml
 
@@ -127,37 +121,20 @@ node {
 		yaml = readYaml(file: 'config.yml')
 		echo "$yaml"
 
+		// 環境変数定義がある場合は環境変数を設定する。
 		timestamps {
-			// 環境変数定義がある場合は環境変数を設定する。
-			// 上書き用の環境変数定義があれば設定する。
 			def __env = ""
-			def __stages = ""
-
 			if (yaml.config.env != null) {
 				__env = yaml.config.env
 			}
-			if (params.env != null && params.env != "") {
+			if (params.env != null) {
 				def __ow_env = params.env.split("\n")
 				__ow_env.each { line ->
 					__env += line
 				}
 			}
 
-			// job一覧の上書き設定がある場合は上書きする。
-			// params.stagesは、環境変数設定も同時に入ってくるので、
-			// 分離してリストにする。
-			if (yaml.stages != null) {
-				__stages = yaml.stages
-			}
-			if (params.stages != null && params.stages != "") {
-				def __ow_stages = params.stages.split("\n")
-				__ow_stages.each { line ->
-					__stages += line
-				}
-			}
-
 			withEnv(__env) {
-				echo "$__stages"
 				__exec_stages(yaml.stages, yaml.stage)
 			}
 		}
