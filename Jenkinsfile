@@ -75,10 +75,9 @@ def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 			}
 		}
 
-		// stashはそのまま渡す。
-		// よって、name, excludesを設定すること。
+		// 結果をstashする。
 		if (stage_param.result != null) {
-			stash name: "____result_${stage_name}____", excludes: stage_param.result
+			stash allowEmpty: true, excludes: stage_param.result, name: "____result_${stage_name}____"
 		}
 	}
 }
