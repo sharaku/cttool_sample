@@ -31,7 +31,6 @@ def __exec_single_stage(def stage_param)
 
 
 // parallel操作を行う。
-// __exec_stage()を呼べるとよいのだが、呼べなかった。
 def __exec_parallel(def stage_name, def stage_list, def stage_param)
 {
 	def __parallel = [:]
@@ -41,20 +40,11 @@ def __exec_parallel(def stage_name, def stage_list, def stage_param)
 	stage_param.parallel.each { __line ->
 		__parallel[__line] = {
 			stage(__line) {
-				__exec_single_stage(stage_list[__line])
-//				node (stage_list[__line].node) {
-//					if (stage_list[__line].script != null) {
-//						stage_list[__line].script.each { __script ->
-//							if (__script.sh != null) {
-//								sh __script.sh
-//							} else if (__script.echo  != null) {
-//								echo __script.echo
-//							} else if (__script.powershell  != null) {
-//								powershell __script.sh
-//							}
-//						}
-//					}
-//				}
+				if (stage_list[__line].parallel != null) {
+					__exec_parallel(stage_name, stage_list, stage_list[__line])
+				} else {
+					__exec_single_stage(stage_list[__line])
+				}
 			}
 		}
 	}
@@ -66,18 +56,6 @@ def __exec_parallel(def stage_name, def stage_list, def stage_param)
 }
 
 
-
-// パラメータに沿ってstageを実行する
-def __exec_stage(def stage_name, def stage_list, def stage_param)
-{
-	if (stage_param.parallel != null) {
-		echo "debug: parallel"
-		__exec_parallel(stage_name, stage_list, stage_param)
-	} else {
-		__exec_single_stage(stage_param)
-	}
-}
-
 def __exec_stages(def stages, def stage_list)
 {
 	stages.each { __line ->
@@ -87,6 +65,11 @@ def __exec_stages(def stages, def stage_list)
 		} else {
 			stage(__line) {
 				__exec_stage(__line, stage_list, stage_list[__line])
+				if (stage_list[__line].parallel != null) {
+					__exec_parallel(stage_name, stage_list, stage_list[__line])
+				} else {
+					__exec_single_stage(stage_list[__line])
+				}
 			}
 		}
 	}
