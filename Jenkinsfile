@@ -113,7 +113,7 @@ def __exec_env_overwrite(def stages, def stage_list)
 		def __env = [:]
 		def env_list = params.env.split("\n")
 		env_list.each { val ->
-			def val_spl = cmds.split("=")
+			def val_spl = val.split("=")
 			__env[val_spl[0]] = val_spl[1]
 		}
 
