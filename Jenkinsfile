@@ -24,6 +24,7 @@ def __mk_parallel(def parallel_list, def stage_list)
 
 node {
 	stage('onetime setup'){
+		checkout scm
 		echo "onetime setup"
 	}
 
@@ -41,8 +42,8 @@ node {
 		echo "job2"
 	}
 
-	stage('job3'){
-		echo "job3"
+	stage('onetime teardown'){
+		echo "onetime teardown"
 	}
 }
 
