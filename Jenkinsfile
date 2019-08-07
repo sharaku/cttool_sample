@@ -69,7 +69,7 @@ def __exec_stages(def stages, def stage_list)
 			// w’è‚³‚ê‚½job‚Í‚ ‚è‚Ü‚¹‚ñ‚Å‚µ‚½B
 			echo "${stage_list[__line]} is not found."
 		} else {
-			stage(stage_name) {
+			stage(__line) {
 				__exec_stage(__line, stage_list, stage_list[__line])
 			}
 		}
