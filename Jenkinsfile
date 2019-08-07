@@ -35,6 +35,7 @@ node {
 			// 設定ファイルを読み込む
 			// Pipeline Utility Steps Pluginの関数を使う
 			yaml = readYaml(file: 'config.yml')
+			echo "$yaml"
 		}
 	}
 
