@@ -126,11 +126,11 @@ node {
 			def __env = ""
 			if (yaml.config.env != null) {
 				__env = yaml.config.env
-				echo "$__env"
 			}
 			if (params.env != null) {
 				__env += params.env.split("\n")
 			}
+			echo "$__env"
 			withEnv(__env) {
 				__exec_stages(yaml.stages, yaml.stage)
 			}
