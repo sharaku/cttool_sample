@@ -56,7 +56,7 @@ def __exec_stage(def stage_name, def stage_list, def stage_param)
 {
 	if (stage_param.parallel != null) {
 		echo "debug: parallel"
-		__exec_parallel(__line, stage_list, stage_param)
+		__exec_parallel(stage_name, stage_list, stage_param)
 	} else {
 		__exec_single_stage(stage_name, stage_param)
 	}
