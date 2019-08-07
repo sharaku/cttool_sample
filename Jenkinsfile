@@ -114,10 +114,10 @@ def __exec_env_overwrite(def stages, def stage_list)
 
 		echo "env=${__env}"
 		withEnv(__env) {
-			__exec_stages(yaml.stages, yaml.stage)
+			__exec_stages(stages, stage_list)
 		}
 	}
-	__exec_stages(yaml.stages, yaml.stage)
+	__exec_stages(stages, stage_list)
 }
 
 // ‚±‚±‚©‚ç‚ªƒGƒ“ƒgƒŠB
