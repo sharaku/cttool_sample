@@ -5,6 +5,7 @@ config:
     - env_B=1
 
 stages:
+ - job1
 
 stage:
   - name: job1
