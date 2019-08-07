@@ -19,6 +19,7 @@ def __mk_parallel(def parallel_list, def stage_list)
 
 def __exec_single_stage(def stage_param)
 {
+	echo "debug: __exec_stage($stage_param)"
 	def _node
 	if (stage_param.node == null) {
 		_node = "master"
@@ -39,6 +40,7 @@ def __exec_single_stage(def stage_param)
 // パラメータに沿ってstageを実行する
 def __exec_stage(def stage_param)
 {
+	echo "debug: __exec_stage($stage_param)"
 	if (stage_param.parallel != null) {
 		echo "${stage_param.name} is parallel."
 	} else {
@@ -49,6 +51,7 @@ def __exec_stage(def stage_param)
 
 def __stages(def stages, def stage_list)
 {
+	echo "debug: __stages($stages, $stage_list)"
 	stages.each { __line ->
 		if (stage_list[__line] == null) {
 			echo "${__line} is not found."
