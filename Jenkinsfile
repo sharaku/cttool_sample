@@ -2,7 +2,7 @@
 
 //load 'libcitool.groovy'
 
-def __exec_single_stage(def stage_name, def stage_param)
+def __exec_single_stage(def stage_param)
 {
 	def _node
 
@@ -15,16 +15,14 @@ def __exec_single_stage(def stage_name, def stage_param)
 	}
 
 	node (_node) {
-		stage(stage_name) {
-			if (stage_param.script != null) {
-				stage_param.script.each { __script ->
-					if (__script.sh != null) {
-						sh __script.sh
-					} else if (__script.echo  != null) {
-						echo __script.echo
-					} else if (__script.powershell  != null) {
-						powershell __script.sh
-					}
+		if (stage_param.script != null) {
+			stage_param.script.each { __script ->
+				if (__script.sh != null) {
+					sh __script.sh
+				} else if (__script.echo  != null) {
+					echo __script.echo
+				} else if (__script.powershell  != null) {
+					powershell __script.sh
 				}
 			}
 		}
@@ -39,7 +37,7 @@ def __exec_stage(def stage_name, def stage_list, def stage_param)
 		echo "debug: parallel"
 		__exec_parallel(stage_name, stage_list, stage_param)
 	} else {
-		__exec_single_stage(stage_name, stage_param)
+		__exec_single_stage(stage_param)
 	}
 }
 
@@ -52,14 +50,11 @@ def __exec_parallel(def stage_name, def stage_list, def stage_param)
 
 	stage_param.parallel.each { __line ->
 		__parallel[__line] = {
-			sh "test"
+			stage(__line) {
+				__exec_stage(__line, stage_list[__line])
+			}
 		}
 	}
-//	stage_param.parallel.each { __line ->
-//		__parallel[__line] = {
-//			__exec_stage(__line, stage_list[__line])
-//		}
-//	}
 	echo "debug: parallel($__parallel)"
 
 	stage(stage_name) {
@@ -74,7 +69,9 @@ def __exec_stages(def stages, def stage_list)
 			// w’è‚³‚ê‚½job‚Í‚ ‚è‚Ü‚¹‚ñ‚Å‚µ‚½B
 			echo "${stage_list[__line]} is not found."
 		} else {
-			__exec_stage(__line, stage_list, stage_list[__line])
+			stage(stage_name) {
+				__exec_stage(__line, stage_list, stage_list[__line])
+			}
 		}
 	}
 }
