@@ -95,9 +95,9 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 		__parallel[__line] = {
 			stage(__line) {
 				if (stage_list[__line].parallel != null) {
-					__exec_parallel(stage_name, stage_list, ow_env, stage_list[__line])
+					__exec_parallel(__line, stage_list, ow_env, stage_list[__line])
 				} else {
-					__exec_single_stage(stage_name, ow_env, stage_list[__line])
+					__exec_single_stage(__line, ow_env, stage_list[__line])
 				}
 			}
 		}
@@ -108,7 +108,7 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 	}
 
 	stage_param.parallel.each { __line ->
-		unstash name: "____result_${__line}____"
+		unstash "____result_${__line}____"
 	}
 }
 
@@ -149,10 +149,10 @@ def __exec_stages(def stages, def stage_list)
 		} else {
 			stage(__job) {
 				if (stage_list[__job].parallel != null) {
-					__exec_parallel(stage_name, stage_list, __ow_env, stage_list[__job])
+					__exec_parallel(__job, stage_list, __ow_env, stage_list[__job])
 				} else {
-					__exec_single_stage(stage_name, __ow_env, stage_list[__job])
-					unstash name: "____result_${__line}____"
+					__exec_single_stage(__job, __ow_env, stage_list[__job])
+					unstash "____result_${__line}____"
 				}
 			}
 		}
