@@ -1,34 +1,13 @@
-<?xml version="1.0" ?>
-<testsuite name="info.classmethod.testing.HogeTest" tests="4" errors="1" failures="1" time="0.003">
-  <testcase classname="info.classmethod.testing.HogeTest" name="testCase01" time="0.001" />
-  <testcase classname="info.classmethod.testing.HogeTest" name="testCase02" time="0.001">
-    <failure type="java.lang.AssertionError" message="test failed" >java.lang.AssertionError: test failed
-  at org.junit.Assert.fail(Assert.java:88)
-  at jp.classmethod.testing.examples.core.runner.DynamicTestsRunnerExample$1.invokeTest(DynamicTestsRunnerExample.java:33)
-  at jp.classmethod.testing.core.runner.DynamicTestsRunner.invokeTest(DynamicTestsRunner.java:86)
-  at jp.classmethod.testing.core.runner.DynamicTestsRunner.run(DynamicTestsRunner.java:68)
-  at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
-  at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
-  at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:467)
-  at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:683)
-  at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:390)
-  at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:197)</failure>
-  </testcase>
-  <testcase classname="info.classmethod.testing.HogeTest" name="testCase03" time="0.001">
-    <error type="java.lang.NullPointerException" message="NPE" >java.lang.NullPointerException: NPE
-  at jp.classmethod.testing.examples.core.runner.DynamicTestsRunnerExample$1.invokeTest(DynamicTestsRunnerExample.java:36)
-  at jp.classmethod.testing.core.runner.DynamicTestsRunner.invokeTest(DynamicTestsRunner.java:86)
-  at jp.classmethod.testing.core.runner.DynamicTestsRunner.run(DynamicTestsRunner.java:68)
-  at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
-  at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
-  at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:467)
-  at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:683)
-  at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:390)
-  at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:197)</error>
-  </testcase>
-  <testcase classname="info.classmethod.testing.HogeTest" name="testCase04" time="0.000">
-    <skipped/>
-  </testcase>
-  <system-out><![CDATA[sdtout!]]></system-out>
-  <system-err><![CDATA[stderr!]]></system-err>
-</testsuite>
+<?xml version="1.0" encoding="UTF-8" ?> 
+   <testsuites id="20140612_170519" name="New_configuration (14/06/12 17:05:19)" tests="225" failures="1262" time="0.001">
+      <testsuite id="codereview.cobol.analysisProvider" name="COBOL Code Review" tests="45" failures="17" time="0.001">
+         <testcase id="codereview.cobol.rules.ProgramIdRule" name="Use a program name that matches the source file name" time="0.001">
+            <failure message="PROGRAM.cbl:2 Use a program name that matches the source file name" type="WARNING">
+WARNING: Use a program name that matches the source file name
+Category: COBOL Code Review ? Naming Conventions
+File: /project/PROGRAM.cbl
+Line: 2
+      </failure>
+    </testcase>
+  </testsuite>
+</testsuites>

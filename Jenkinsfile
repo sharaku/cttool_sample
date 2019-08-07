@@ -205,7 +205,6 @@ node {
 		}
 
 		if (yaml.config.junit != null) {
-			echo "$yaml.config.junit"
 			junit yaml.config.junit
 		}
 	}
