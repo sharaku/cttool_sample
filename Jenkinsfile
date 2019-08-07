@@ -15,7 +15,7 @@ def __exec_script(def script)
 	}
 }
 
-def __exec_single_stage(def stage_param)
+def __exec_single_stage(def ow_env, def stage_param)
 {
 	def _node
 
@@ -45,10 +45,16 @@ def __exec_single_stage(def stage_param)
 			// shellを実行していく
 			if (stage_param.env != null) {
 				__env = stage_param.env
+			}
+			ow_env.each { line ->
+				__env += line
+			}
+
+			if (__env != "") {
 				withEnv(__env) {
 					__exec_script(stage_param.script)
 				}
-			} else {
+			else {
 				__exec_script(stage_param.script)
 			}
 		}
@@ -65,7 +71,7 @@ def __exec_single_stage(def stage_param)
 
 
 // parallel操作を行う。
-def __exec_parallel(def stage_name, def stage_list, def stage_param)
+def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 {
 	def __parallel = [:]
 
@@ -75,9 +81,9 @@ def __exec_parallel(def stage_name, def stage_list, def stage_param)
 		__parallel[__line] = {
 			stage(__line) {
 				if (stage_list[__line].parallel != null) {
-					__exec_parallel(stage_name, stage_list, stage_list[__line])
+					__exec_parallel(stage_name, stage_list, ow_env, stage_list[__line])
 				} else {
-					__exec_single_stage(stage_list[__line])
+					__exec_single_stage(ow_env, stage_list[__line])
 				}
 			}
 		}
@@ -89,19 +95,42 @@ def __exec_parallel(def stage_name, def stage_list, def stage_param)
 	}
 }
 
+// 行は次のフォーマットとする
+// {jobname} {env:xxx=xxx,xxx=xxx}
+def __mk_env(def list)
+{
+	def __ow_env=[]
+
+	list.each { __line ->
+		def vals = __line.split(":")
+		if (vals[0] == "env") {
+			vals[1].split(",").each { __env ->
+				__ow_env += __env
+			}
+		}
+	}
+	return __ow_env
+}
 
 def __exec_stages(def stages, def stage_list)
 {
 	stages.each { __line ->
-		if (stage_list[__line] == null) {
+		def __line_split = __line.split(" ")
+		def __job = __line_split[0]
+		def __ow_env=[]
+
+		// 追加引数リストを作る
+		__ow_env = __mk_env(__line_split)
+
+		if (stage_list[__job] == null) {
 			// 指定されたjobはありませんでした。
-			echo "${stage_list[__line]} is not found."
+			echo "${__job} is not found."
 		} else {
-			stage(__line) {
-				if (stage_list[__line].parallel != null) {
-					__exec_parallel(stage_name, stage_list, stage_list[__line])
+			stage(__job) {
+				if (stage_list[__job].parallel != null) {
+					__exec_parallel(stage_name, stage_list, __ow_env, stage_list[__job])
 				} else {
-					__exec_single_stage(stage_list[__line])
+					__exec_single_stage(__ow_env, stage_list[__job])
 				}
 			}
 		}
@@ -154,9 +183,14 @@ node {
 				}
 			}
 
-			withEnv(__env) {
+			if (__env != "") {
+				withEnv(__env) {
+					__exec_stages(__stages, yaml.stage)
+				}
+			else {
 				__exec_stages(__stages, yaml.stage)
 			}
+
 		}
 	}
 }
