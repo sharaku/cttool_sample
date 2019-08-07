@@ -205,7 +205,7 @@ node {
 		}
 
 		if (yaml.config.junit != null) {
-			junit yaml.config.junit
+			junit testResults:yaml.config.junit.testResults
 		}
 	}
 }
