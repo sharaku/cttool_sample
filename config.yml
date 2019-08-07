@@ -6,8 +6,6 @@ config:
 
 stages:
  - job1
- - job2
- - para_job1
 
 stage:
   job1:
