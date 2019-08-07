@@ -77,7 +77,7 @@ def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 
 		// Œ‹‰Ê‚ğstash‚·‚éB
 		if (stage_param.result != null) {
-			stash allowEmpty: true, excludes: stage_param.result, name: "____result_${stage_name}____"
+			stash allowEmpty: true, includes: stage_param.result, name: "____result_${stage_name}____"
 			echo "stash ____result_${stage_name}____"
 		}
 	}
