@@ -78,6 +78,7 @@ def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 		// Œ‹‰Ê‚ğstash‚·‚éB
 		if (stage_param.result != null) {
 			stash allowEmpty: true, excludes: stage_param.result, name: "____result_${stage_name}____"
+			echo "stash ____result_${stage_name}____"
 		}
 	}
 }
@@ -107,6 +108,7 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 	}
 
 	stage_param.parallel.each { __line ->
+		echo "unstash ____result_${__line}____"
 		unstash "____result_${__line}____"
 	}
 }
@@ -151,7 +153,8 @@ def __exec_stages(def stages, def stage_list)
 					__exec_parallel(__job, stage_list, __ow_env, stage_list[__job])
 				} else {
 					__exec_single_stage(__job, __ow_env, stage_list[__job])
-					unstash "____result_${__line}____"
+					echo "unstash ____result_${__job}____"
+					unstash "____result_${__job}____"
 				}
 			}
 		}
