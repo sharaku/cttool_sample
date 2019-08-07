@@ -78,7 +78,7 @@ def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 		// stash‚Í‚»‚Ì‚Ü‚Ü“n‚·B
 		// ‚æ‚Á‚ÄAname, excludes‚ğİ’è‚·‚é‚±‚ÆB
 		if (stage_param.result != null) {
-			stash name: "____result_${stage_name}____", excludes: 'result/*.xml'
+			stash name: "____result_${stage_name}____", excludes: stage_param.result
 		}
 	}
 }

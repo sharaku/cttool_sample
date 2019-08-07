@@ -24,8 +24,7 @@ stage:
     env:
      - env_C="C"
      - env_D="D"
-    result:
-     - 'result/*.xml'
+    result: 'result/*.xml'
 
   job2:
     node: master
@@ -35,8 +34,7 @@ stage:
      - sh: pwd
      - sh: sh ./mkresult result/junit2.xml
      - sh: echo "job2 env_C=${env_C} env_D=${env_D}"
-    result:
-     - 'result/*.xml'
+    result: 'result/*.xml'
 
   para_job1:
     parallel:
