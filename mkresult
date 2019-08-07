@@ -1,3 +1,8 @@
+#!/bin/bash
+
+mkdir -p result
+
+cat << __EOC__ > $1
 <?xml version="1.0" encoding="UTF-8" ?> 
    <testsuites id="20140612_170519" name="New_configuration (14/06/12 17:05:19)" tests="225" failures="1262" time="0.001">
       <testsuite id="codereview.cobol.analysisProvider" name="COBOL Code Review" tests="45" failures="17" time="0.001">
@@ -11,3 +16,4 @@ Line: 2
     </testcase>
   </testsuite>
 </testsuites>
+__EOC__

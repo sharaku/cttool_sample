@@ -23,7 +23,7 @@ def __exec_script(def script)
 // ---------------------------------------------------------------------
 // 1つのstageを実行する。
 // ---------------------------------------------------------------------
-def __exec_single_stage(def ow_env, def stage_param)
+def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 {
 	def _node
 
@@ -43,7 +43,7 @@ def __exec_single_stage(def ow_env, def stage_param)
 				unstash __stash
 			}
 		} else {
-			unstash 'initialize'
+			unstash '____initialize____'
 		}
 
 		// スクリプトがなければ何もしない。
@@ -74,6 +74,12 @@ def __exec_single_stage(def ow_env, def stage_param)
 				stash __stash
 			}
 		}
+
+		// stashはそのまま渡す。
+		// よって、name, excludesを設定すること。
+		if (stage_param.result != null) {
+			stash name: "____result_${stage_name}____", excludes: stage_param.result
+		}
 	}
 }
 
@@ -91,7 +97,7 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 				if (stage_list[__line].parallel != null) {
 					__exec_parallel(stage_name, stage_list, ow_env, stage_list[__line])
 				} else {
-					__exec_single_stage(ow_env, stage_list[__line])
+					__exec_single_stage(stage_name, ow_env, stage_list[__line])
 				}
 			}
 		}
@@ -99,6 +105,10 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 
 	stage(stage_name) {
 		parallel(__parallel)
+	}
+
+	stage_param.parallel.each { __line ->
+		unstash name: "____result_${__line}____"
 	}
 }
 
@@ -141,7 +151,8 @@ def __exec_stages(def stages, def stage_list)
 				if (stage_list[__job].parallel != null) {
 					__exec_parallel(stage_name, stage_list, __ow_env, stage_list[__job])
 				} else {
-					__exec_single_stage(__ow_env, stage_list[__job])
+					__exec_single_stage(stage_name, __ow_env, stage_list[__job])
+					unstash name: "____result_${__line}____"
 				}
 			}
 		}
@@ -157,7 +168,7 @@ node {
 	// clean checkoutする
 	deleteDir()
 	checkout scm
-	stash name: 'initialize'
+	stash name: '____initialize____'
 
 	script {
 		// 設定ファイルを読み込む
