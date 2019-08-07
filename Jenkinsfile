@@ -64,7 +64,6 @@ def __exec_stages(def stages, def stage_list)
 			echo "${stage_list[__line]} is not found."
 		} else {
 			stage(__line) {
-				__exec_stage(__line, stage_list, stage_list[__line])
 				if (stage_list[__line].parallel != null) {
 					__exec_parallel(stage_name, stage_list, stage_list[__line])
 				} else {
