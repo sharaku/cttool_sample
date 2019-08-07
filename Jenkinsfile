@@ -117,6 +117,7 @@ def __exec_env_overwrite(def stages, def stage_list)
 			__env[val_spl[0]] = val_spl[1]
 		}
 
+		echo "env=${__env}"
 		withEnv(__env) {
 			__exec_stages(yaml.stages, yaml.stage)
 		}
