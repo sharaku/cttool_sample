@@ -40,13 +40,14 @@ def __exec_single_stage(def stage_param)
 
 		// スクリプトがなければ何もしない。
 		if (stage_param.script != null) {
+			def __env = ""
+
 			// 環境変数定義があれば、環境変数を設定してから、
 			// shellを実行していく
 			if (stage_param.env != null) {
-				withEnv(stage_param.env) {
-					__exec_script(stage_param.script)
-				}
-			} else {
+				__env = stage_param.env
+			}
+			withEnv(__env) {
 				__exec_script(stage_param.script)
 			}
 		}
