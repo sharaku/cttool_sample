@@ -110,12 +110,7 @@ def __exec_stages(def stages, def stage_list)
 def __exec_env_overwrite(def stages, def stage_list)
 {
 	if (params.env) {
-		def __env = [:]
-		def env_list = params.env.split("\n")
-		env_list.each { val ->
-			def val_spl = val.split("=")
-			__env[val_spl[0]] = val_spl[1]
-		}
+		def __env = params.env.split("\n")
 
 		echo "env=${__env}"
 		withEnv(__env) {
