@@ -52,9 +52,14 @@ def __exec_parallel(def stage_name, def stage_list, def stage_param)
 
 	stage_param.parallel.each { __line ->
 		__parallel[__line] = {
-			__exec_stage(__line, stage_list[__line])
+			sh "test"
 		}
 	}
+//	stage_param.parallel.each { __line ->
+//		__parallel[__line] = {
+//			__exec_stage(__line, stage_list[__line])
+//		}
+//	}
 	echo "debug: parallel($__parallel)"
 
 	stage(stage_name) {
