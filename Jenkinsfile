@@ -19,7 +19,7 @@ def __mk_parallel(def parallel_list, def stage_list)
 
 def __exec_single_stage(def stage_param)
 {
-	echo "debug: __exec_stage($stage_param)"
+	echo "debug: __exec_single_stage($stage_param)"
 	def _node
 	if (stage_param.node == null) {
 		_node = "master"

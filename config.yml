@@ -11,5 +11,9 @@ stage:
   job1:
     node: master
     script:
-     - sh: make
+     - sh: echo "job1"
+  job2:
+    node: master
+    script:
+     - sh: echo "job2"
 
