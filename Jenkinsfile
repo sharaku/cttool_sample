@@ -130,10 +130,18 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 // ---------------------------------------------------------------------
 def __exec_subproject(def stage_name, def ow_env, def stage_param)
 {
+	def __env = ""
+
 	// サブプロジェクトの設定ファイルを読み込む
 	// Pipeline Utility Steps Pluginの関数を使う
 	yaml = readYaml(file: "${stage_param.subproject}/config.yml")
-	withEnv(["jobpath=${stage_param.subproject}/"]) {
+
+	if (yaml.config.env != null) {
+		__env = yaml.config.env
+	}
+	__env += "JOBPATH=${stage_param.subproject}/"
+
+	withEnv(__env) {
 		__exec_stages(yaml.stages, yaml.stage)
 	}
 }
@@ -162,26 +170,28 @@ def __mk_env(def list)
 
 def __exec_stages(def stages, def stage_list)
 {
-	stages.each { __line ->
-		def __line_split = __line.split(" ")
-		def __job = __line_split[0]
-		def __ow_env=[]
+	withEnv(["JOBPATH="]) {
+		stages.each { __line ->
+			def __line_split = __line.split(" ")
+			def __job = __line_split[0]
+			def __ow_env=[]
 
-		// 追加引数リストを作る
-		__ow_env = __mk_env(__line_split)
+			// 追加引数リストを作る
+			__ow_env = __mk_env(__line_split)
 
-		if (stage_list[__job] == null) {
-			// 指定されたjobはありませんでした。
-			echo "${__job} is not found."
-		} else {
-			stage(__job) {
-				if (stage_list[__job].parallel != null) {
-					__exec_parallel(__job, stage_list, __ow_env, stage_list[__job])
-				} else if (stage_list[__job].subproject != null) {
-					__exec_subproject(__job, __ow_env, stage_list[__job])
-				} else {
-					__exec_single_stage(__job, __ow_env, stage_list[__job])
-					unstash "____result_${__job}____"
+			if (stage_list[__job] == null) {
+				// 指定されたjobはありませんでした。
+				echo "${__job} is not found."
+			} else {
+				stage(__job) {
+					if (stage_list[__job].parallel != null) {
+						__exec_parallel(__job, stage_list, __ow_env, stage_list[__job])
+					} else if (stage_list[__job].subproject != null) {
+						__exec_subproject(__job, __ow_env, stage_list[__job])
+					} else {
+						__exec_single_stage(__job, __ow_env, stage_list[__job])
+						unstash "____result_${__job}____"
+					}
 				}
 			}
 		}
@@ -209,8 +219,8 @@ node {
 		timestamps {
 			// 環境変数定義がある場合は環境変数を設定する。
 			// 上書き用の環境変数定義があれば設定する。
-			def __env = ""
-			def __stages = ""
+			def __env = []
+			def __stages = []
 
 			if (yaml.config.env != null) {
 				__env = yaml.config.env
@@ -235,7 +245,7 @@ node {
 				}
 			}
 
-			if (__env != "") {
+			if (__env != []) {
 				withEnv(__env) {
 					__exec_stages(__stages, yaml.stage)
 				}
