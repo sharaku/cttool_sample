@@ -160,7 +160,9 @@ def __exec_stages(def stages, def stage_list)
 						__exec_subproject(__job, __ow_env, stage_list[__job])
 					} else {
 						__exec_single_stage(__job, __ow_env, stage_list[__job])
-						unstash "____result_${__job}____"
+						if (stage_list[__job].result != null) {
+							unstash "____result_${__job}____"
+						}
 					}
 				}
 			}
@@ -196,7 +198,9 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 	}
 
 	stage_param.parallel.each { __line ->
-		unstash "____result_${__line}____"
+		if (stage_list[__line].result != null) {
+			unstash "____result_${__line}____"
+		}
 	}
 }
 
