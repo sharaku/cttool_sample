@@ -1,0 +1,24 @@
+config:
+  env:
+    - env_A=0
+    - env_B=1
+
+stages:
+ - sample_job1
+ - sample_job2
+
+stage:
+  sample_job1:
+    node: master
+    script:
+     - sh: echo "sample_job1 env_A=${env_A} env_C=${env_C} env_D=${env_D}"
+    env:
+     - env_C="C"
+     - env_D="D"
+    result: 'result/*.xml'
+
+  sample_job2:
+    node: master
+    script:
+     - sh: echo "sample_job2 env_C=${env_C} env_D=${env_D}"
+    result: 'result/*.xml'

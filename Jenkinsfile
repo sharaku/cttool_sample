@@ -78,7 +78,6 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 		// 結果をstashする。
 		if (stage_param.result != null) {
 			stash allowEmpty: true, includes: stage_param.result, name: "____result_${stage_name}____"
-			echo "stash ____result_${stage_name}____"
 		}
 	}
 }
@@ -91,6 +90,23 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 {
 	__exec_scripts(stage_name, ow_env, stage_param)
+}
+
+
+
+// ---------------------------------------------------------------------
+// 1つのスクリプトの塊を実行する。
+// ---------------------------------------------------------------------
+def __exec_subproject(def stage_name, def ow_env, def stage_param)
+{
+	echo "debug: __exec_subproject() path=${stage_param..subproject}/config.yml"
+
+	// サブプロジェクトの設定ファイルを読み込む
+	// Pipeline Utility Steps Pluginの関数を使う
+	yaml = readYaml(file: "${stage_param..subproject}/config.yml")
+
+	__exec_stages(yaml.stages, yaml.stage)
+
 }
 
 // ---------------------------------------------------------------------
@@ -117,7 +133,6 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 	}
 
 	stage_param.parallel.each { __line ->
-		echo "unstash ____result_${__line}____"
 		unstash "____result_${__line}____"
 	}
 }
@@ -162,7 +177,6 @@ def __exec_stages(def stages, def stage_list)
 					__exec_parallel(__job, stage_list, __ow_env, stage_list[__job])
 				} else {
 					__exec_single_stage(__job, __ow_env, stage_list[__job])
-					echo "unstash ____result_${__job}____"
 					unstash "____result_${__job}____"
 				}
 			}
@@ -185,7 +199,6 @@ node {
 		// 設定ファイルを読み込む
 		// Pipeline Utility Steps Pluginの関数を使う
 		yaml = readYaml(file: 'config.yml')
-		echo "$yaml"
 
 		timestamps {
 			// 環境変数定義がある場合は環境変数を設定する。
@@ -226,8 +239,14 @@ node {
 
 		}
 
+		// junitを実行する
 		if (yaml.config.junit != null) {
 			junit yaml.config.junit
+		}
+
+		// archiveArtifactsを使って成果物を保存する
+		if (yaml.config.archiveArtifacts != null) {
+			archiveArtifacts yaml.config.archiveArtifacts
 		}
 	}
 }

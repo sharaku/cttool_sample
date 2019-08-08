@@ -1,5 +1,4 @@
 config:
-  subprojects: ./testset
   env:
     - env_A=0
     - env_B=1
@@ -7,6 +6,8 @@ config:
     allowEmptyResults: true
     keepLongStdio: true
     testResults: 'result/*.xml'
+  archiveArtifacts:
+    artifacts: 'result/*'
 
 stages:
  - job1
@@ -35,6 +36,9 @@ stage:
      - sh: sh ./mkresult result/junit2.xml
      - sh: echo "job2 env_C=${env_C} env_D=${env_D}"
     result: 'result/*.xml'
+
+  job3:
+    subproject: testset/sample
 
   para_job1:
     parallel:
