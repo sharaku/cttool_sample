@@ -87,9 +87,16 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 // ---------------------------------------------------------------------
 // 1つのスクリプトの塊を実行する。
 // ---------------------------------------------------------------------
-def __exec_single_stage(def stage_name, def ow_env, def stage_param)
+def __exec_subproject(def stage_name, def ow_env, def stage_param)
 {
-	__exec_scripts(stage_name, ow_env, stage_param)
+	echo "debug: __exec_subproject() path=${stage_param.subproject}/config.yml"
+
+	// サブプロジェクトの設定ファイルを読み込む
+	// Pipeline Utility Steps Pluginの関数を使う
+	yaml = readYaml(file: "${stage_param.subproject}/config.yml")
+
+	__exec_stages(yaml.stages, yaml.stage)
+
 }
 
 
@@ -97,16 +104,13 @@ def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 // ---------------------------------------------------------------------
 // 1つのスクリプトの塊を実行する。
 // ---------------------------------------------------------------------
-def __exec_subproject(def stage_name, def ow_env, def stage_param)
+def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 {
-	echo "debug: __exec_subproject() path=${stage_param..subproject}/config.yml"
-
-	// サブプロジェクトの設定ファイルを読み込む
-	// Pipeline Utility Steps Pluginの関数を使う
-	yaml = readYaml(file: "${stage_param..subproject}/config.yml")
-
-	__exec_stages(yaml.stages, yaml.stage)
-
+	if (stage_param.subproject != null) {
+		__exec_subproject(stage_name, ow_env, stage_param)
+	} else {
+		__exec_scripts(stage_name, ow_env, stage_param)
+	}
 }
 
 // ---------------------------------------------------------------------
