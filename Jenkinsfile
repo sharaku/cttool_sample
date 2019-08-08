@@ -96,41 +96,11 @@ def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 
 
 // ---------------------------------------------------------------------
-// 1つのstage（parallel）を実行する。
-// ---------------------------------------------------------------------
-def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
-{
-	def __parallel = [:]
-
-	stage_param.parallel.each { __line ->
-		__parallel[__line] = {
-			stage(__line) {
-				if (stage_list[__line].parallel != null) {
-					__exec_parallel(__line, stage_list, ow_env, stage_list[__line])
-				} else {
-					__exec_single_stage(__line, ow_env, stage_list[__line])
-				}
-			}
-		}
-	}
-
-	stage(stage_name) {
-		parallel(__parallel)
-	}
-
-	stage_param.parallel.each { __line ->
-		unstash "____result_${__line}____"
-	}
-}
-
-
-
-// ---------------------------------------------------------------------
 // 1つのスクリプトの塊を実行する。
 // ---------------------------------------------------------------------
 def __exec_subproject(def stage_name, def ow_env, def stage_param)
 {
-	def __env = ""
+	def __env = []
 
 	// サブプロジェクトの設定ファイルを読み込む
 	// Pipeline Utility Steps Pluginの関数を使う
@@ -195,6 +165,38 @@ def __exec_stages(def stages, def stage_list)
 				}
 			}
 		}
+	}
+}
+
+
+
+// ---------------------------------------------------------------------
+// 1つのstage（parallel）を実行する。
+// ---------------------------------------------------------------------
+def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
+{
+	def __parallel = [:]
+
+	stage_param.parallel.each { __line ->
+		__parallel[__line] = {
+			stage(__line) {
+				if (stage_list[__line].parallel != null) {
+					__exec_parallel(__line, stage_list, ow_env, stage_list[__line])
+				} else if (stage_list[__job].subproject != null) {
+					__exec_subproject(__line, ow_env, stage_list[__line])
+				} else {
+					__exec_single_stage(__line, ow_env, stage_list[__line])
+				}
+			}
+		}
+	}
+
+	stage(stage_name) {
+		parallel(__parallel)
+	}
+
+	stage_param.parallel.each { __line ->
+		unstash "____result_${__line}____"
 	}
 }
 
