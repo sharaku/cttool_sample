@@ -14,6 +14,7 @@ stage:
      - sh: echo "sample_job1 env_A=${env_A} env_C=${env_C} env_D=${env_D}"
      - sh: pwd
      - sh: sh ./mkresult result/sample_job1.xml
+     - sh: ls ${jobpath}
      - sh: ls -R
     env:
      - env_C="C"
