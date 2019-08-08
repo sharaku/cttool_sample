@@ -1,7 +1,7 @@
 config:
   env:
-    - env_A=0
-    - env_B=1
+    - env_A=10
+    - env_B=11
 
 stages:
  - sample_job1
