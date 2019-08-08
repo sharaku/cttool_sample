@@ -132,7 +132,7 @@ def __exec_subproject(def stage_name, def ow_env, def stage_param)
 {
 	echo "debug: __exec_subproject() path=${stage_param.subproject}/config.yml"
 
-	dir(${stage_param.subproject}) {
+	dir(stage_param.subproject) {
 		// サブプロジェクトの設定ファイルを読み込む
 		// Pipeline Utility Steps Pluginの関数を使う
 		yaml = readYaml(file: "config.yml")
