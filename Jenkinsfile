@@ -180,7 +180,7 @@ def __exec_stages(def stages, def stage_list)
 				if (stage_list[__job].parallel != null) {
 					__exec_parallel(__job, stage_list, __ow_env, stage_list[__job])
 				} else if (stage_list[__job].subproject != null) {
-					__exec_subproject(stage_name, ow_env, stage_list[__job])
+					__exec_subproject(__job, __ow_env, stage_list[__job])
 				} else {
 					__exec_single_stage(__job, __ow_env, stage_list[__job])
 					unstash "____result_${__job}____"
