@@ -107,8 +107,10 @@ def __exec_subproject(def stage_name, def ow_env, def stage_param)
 def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 {
 	if (stage_param.subproject != null) {
+		echo "debug: __exec_subproject()"
 		__exec_subproject(stage_name, ow_env, stage_param)
 	} else {
+		echo "debug: __exec_scripts()"
 		__exec_scripts(stage_name, ow_env, stage_param)
 	}
 }
