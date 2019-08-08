@@ -12,6 +12,7 @@ stage:
     node: master
     script:
      - sh: echo "sample_job1 env_A=${env_A} env_C=${env_C} env_D=${env_D}"
+     - sh: sh ./mkresult result/junit1.xml
     env:
      - env_C="C"
      - env_D="D"
@@ -21,4 +22,5 @@ stage:
     node: master
     script:
      - sh: echo "sample_job2 env_C=${env_C} env_D=${env_D}"
+     - sh: sh ./mkresult result/junit1.xml
     result: 'result/*.xml'

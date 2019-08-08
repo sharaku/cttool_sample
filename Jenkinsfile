@@ -20,6 +20,7 @@ def __exec_script(def script)
 }
 
 
+
 // ---------------------------------------------------------------------
 // 1つのstageを実行する。
 // ---------------------------------------------------------------------
@@ -87,33 +88,12 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 // ---------------------------------------------------------------------
 // 1つのスクリプトの塊を実行する。
 // ---------------------------------------------------------------------
-def __exec_subproject(def stage_name, def ow_env, def stage_param)
-{
-	echo "debug: __exec_subproject() path=${stage_param.subproject}/config.yml"
-
-	// サブプロジェクトの設定ファイルを読み込む
-	// Pipeline Utility Steps Pluginの関数を使う
-	yaml = readYaml(file: "${stage_param.subproject}/config.yml")
-
-	__exec_stages(yaml.stages, yaml.stage)
-
-}
-
-
-
-// ---------------------------------------------------------------------
-// 1つのスクリプトの塊を実行する。
-// ---------------------------------------------------------------------
 def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 {
-	if (stage_param.subproject != null) {
-		echo "debug: __exec_subproject()"
-		__exec_subproject(stage_name, ow_env, stage_param)
-	} else {
-		echo "debug: __exec_scripts()"
-		__exec_scripts(stage_name, ow_env, stage_param)
-	}
+	__exec_scripts(stage_name, ow_env, stage_param)
 }
+
+
 
 // ---------------------------------------------------------------------
 // 1つのstage（parallel）を実行する。
@@ -142,6 +122,24 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 		unstash "____result_${__line}____"
 	}
 }
+
+
+
+// ---------------------------------------------------------------------
+// 1つのスクリプトの塊を実行する。
+// ---------------------------------------------------------------------
+def __exec_subproject(def stage_name, def ow_env, def stage_param)
+{
+	echo "debug: __exec_subproject() path=${stage_param.subproject}/config.yml"
+
+	dir(${stage_param.subproject}) {
+		// サブプロジェクトの設定ファイルを読み込む
+		// Pipeline Utility Steps Pluginの関数を使う
+		yaml = readYaml(file: "config.yml")
+		__exec_stages(yaml.stages, yaml.stage)
+	}
+}
+
 
 
 // ---------------------------------------------------------------------
@@ -181,6 +179,8 @@ def __exec_stages(def stages, def stage_list)
 			stage(__job) {
 				if (stage_list[__job].parallel != null) {
 					__exec_parallel(__job, stage_list, __ow_env, stage_list[__job])
+				} else if (stage_param.subproject != null) {
+					__exec_subproject(stage_name, ow_env, stage_param)
 				} else {
 					__exec_single_stage(__job, __ow_env, stage_list[__job])
 					unstash "____result_${__job}____"
@@ -189,6 +189,8 @@ def __exec_stages(def stages, def stage_list)
 		}
 	}
 }
+
+
 
 // *********************************************************************
 // ここからがエントリ。
