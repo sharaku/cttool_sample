@@ -182,7 +182,7 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 			stage(__line) {
 				if (stage_list[__line].parallel != null) {
 					__exec_parallel(__line, stage_list, ow_env, stage_list[__line])
-				} else if (stage_list[__job].subproject != null) {
+				} else if (stage_list[__line].subproject != null) {
 					__exec_subproject(__line, ow_env, stage_list[__line])
 				} else {
 					__exec_single_stage(__line, ow_env, stage_list[__line])
