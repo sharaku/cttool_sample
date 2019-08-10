@@ -14,6 +14,13 @@ def __exec_script(def script)
 				echo __script.echo
 			} else if (__script.powershell  != null) {
 				powershell __script.sh
+			} else if (__script.script  != null) {
+				echo __script.script
+				def __script = {
+					__script.script
+				}
+
+				script(__script)
 			}
 		}
 	}

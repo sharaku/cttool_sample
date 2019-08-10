@@ -23,6 +23,11 @@ stage:
      - sh: pwd
      - sh: sh ./mkresult result/junit1.xml
      - echo: "echo job1"
+     - script:	if (env_A == 0) {
+			echo "aaa"
+		} else {
+			echo "bbb"
+		}
     env:
      - env_C="C"
      - env_D="D"
