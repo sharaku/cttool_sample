@@ -22,7 +22,9 @@ def __exec_script(def script)
 					__script.script
 				}
 
-				script(_s)
+				script {
+					_s
+				}
 			}
 		}
 	}
