@@ -2,7 +2,7 @@
 
 
 // ---------------------------------------------------------------------
-// ƒXƒNƒŠƒvƒg‚ğÀs‚·‚éB
+// ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’å®Ÿè¡Œã™ã‚‹ã€‚
 // ---------------------------------------------------------------------
 def __exec_script(def script)
 {
@@ -14,17 +14,6 @@ def __exec_script(def script)
 				echo __script.echo
 			} else if (__script.powershell  != null) {
 				powershell __script.sh
-			} else if (__script.script  != null) {
-				def _s
-				echo __script.script
-
-				_s = {
-					__script.script
-				}
-
-				script {
-					_s
-				}
 			}
 		}
 	}
@@ -33,14 +22,14 @@ def __exec_script(def script)
 
 
 // ---------------------------------------------------------------------
-// 1‚Â‚Ìstage‚ğÀs‚·‚éB
+// 1ã¤ã®stageã‚’å®Ÿè¡Œã™ã‚‹ã€‚
 // ---------------------------------------------------------------------
 def __exec_scripts(def stage_name, def ow_env, def stage_param)
 {
 	def _node
 
-	// g—p‚·‚énode‚ğŒˆ’è‚·‚éB
-	// node‚ªw’è‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ÍAmaster‚ğg—p‚·‚éB
+	// ä½¿ç”¨ã™ã‚‹nodeã‚’æ±ºå®šã™ã‚‹ã€‚
+	// nodeãŒæŒ‡å®šã•ã‚Œã¦ã„ãªã„å ´åˆã¯ã€masterã‚’ä½¿ç”¨ã™ã‚‹ã€‚
 	if (stage_param.node == null) {
 		_node = "master"
 	} else {
@@ -48,7 +37,7 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 	}
 
 	node (_node) {
-		// unstash‚ªİ’è‚³‚ê‚Ä‚¢‚éê‡‚Í‘S•”Às‚·‚éB
+		// unstashãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹å ´åˆã¯å…¨éƒ¨å®Ÿè¡Œã™ã‚‹ã€‚
 		deleteDir()
 		if (stage_param.unstash != null) {
 			stage_param.stash.each { __stash ->
@@ -58,11 +47,11 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 			unstash '____initialize____'
 		}
 
-		// ƒXƒNƒŠƒvƒg‚ª‚È‚¯‚ê‚Î‰½‚à‚µ‚È‚¢B
+		// ã‚¹ã‚¯ãƒªãƒ—ãƒˆãŒãªã‘ã‚Œã°ä½•ã‚‚ã—ãªã„ã€‚
 		if (stage_param.script != null) {
 			def __env = ""
-			// ŠÂ‹«•Ï”’è‹`‚ª‚ ‚ê‚ÎAŠÂ‹«•Ï”‚ğİ’è‚µ‚Ä‚©‚çA
-			// shell‚ğÀs‚µ‚Ä‚¢‚­
+			// ç’°å¢ƒå¤‰æ•°å®šç¾©ãŒã‚ã‚Œã°ã€ç’°å¢ƒå¤‰æ•°ã‚’è¨­å®šã—ã¦ã‹ã‚‰ã€
+			// shellã‚’å®Ÿè¡Œã—ã¦ã„ã
 			if (stage_param.env != null) {
 				__env = stage_param.env
 			}
@@ -79,15 +68,15 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 			}
 		}
 
-		// stash‚Í‚»‚Ì‚Ü‚Ü“n‚·B
-		// ‚æ‚Á‚ÄAname, excludes‚ğİ’è‚·‚é‚±‚ÆB
+		// stashã¯ãã®ã¾ã¾æ¸¡ã™ã€‚
+		// ã‚ˆã£ã¦ã€name, excludesã‚’è¨­å®šã™ã‚‹ã“ã¨ã€‚
 		if (stage_param.stash != null) {
 			stage_param.stash.each { __stash ->
 				stash __stash
 			}
 		}
 
-		// Œ‹‰Ê‚ğstash‚·‚éB
+		// çµæœã‚’stashã™ã‚‹ã€‚
 		if (stage_param.result != null) {
 			stash allowEmpty: true, includes: stage_param.result, name: "____result_${stage_name}____"
 		}
@@ -97,7 +86,7 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 
 
 // ---------------------------------------------------------------------
-// 1‚Â‚ÌƒXƒNƒŠƒvƒg‚Ì‰ò‚ğÀs‚·‚éB
+// 1ã¤ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã®å¡Šã‚’å®Ÿè¡Œã™ã‚‹ã€‚
 // ---------------------------------------------------------------------
 def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 {
@@ -107,14 +96,14 @@ def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 
 
 // ---------------------------------------------------------------------
-// 1‚Â‚ÌƒXƒNƒŠƒvƒg‚Ì‰ò‚ğÀs‚·‚éB
+// 1ã¤ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã®å¡Šã‚’å®Ÿè¡Œã™ã‚‹ã€‚
 // ---------------------------------------------------------------------
 def __exec_subproject(def stage_name, def ow_env, def stage_param)
 {
 	def __env = []
 
-	// ƒTƒuƒvƒƒWƒFƒNƒg‚Ìİ’èƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş
-	// Pipeline Utility Steps Plugin‚ÌŠÖ”‚ğg‚¤
+	// ã‚µãƒ–ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€
+	// Pipeline Utility Steps Pluginã®é–¢æ•°ã‚’ä½¿ã†
 	yaml = readYaml(file: "${stage_param.subproject}/config.yml")
 
 	if (yaml.config.env != null) {
@@ -130,9 +119,9 @@ def __exec_subproject(def stage_name, def ow_env, def stage_param)
 
 
 // ---------------------------------------------------------------------
-// stages‚ğÀs‚·‚éB
+// stagesã‚’å®Ÿè¡Œã™ã‚‹ã€‚
 // ---------------------------------------------------------------------
-// s‚ÍŸ‚ÌƒtƒH[ƒ}ƒbƒg‚Æ‚·‚é
+// è¡Œã¯æ¬¡ã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã¨ã™ã‚‹
 // {jobname} [env:xxx=xxx,xxx=xxx]
 def __mk_env(def list)
 {
@@ -157,11 +146,11 @@ def __exec_stages(def stages, def stage_list)
 			def __job = __line_split[0]
 			def __ow_env=[]
 
-			// ’Ç‰Áˆø”ƒŠƒXƒg‚ğì‚é
+			// è¿½åŠ å¼•æ•°ãƒªã‚¹ãƒˆã‚’ä½œã‚‹
 			__ow_env = __mk_env(__line_split)
 
 			if (stage_list[__job] == null) {
-				// w’è‚³‚ê‚½job‚Í‚ ‚è‚Ü‚¹‚ñ‚Å‚µ‚½B
+				// æŒ‡å®šã•ã‚ŒãŸjobã¯ã‚ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚
 				echo "${__job} is not found."
 			} else {
 				stage(__job) {
@@ -184,7 +173,7 @@ def __exec_stages(def stages, def stage_list)
 
 
 // ---------------------------------------------------------------------
-// 1‚Â‚Ìstageiparallelj‚ğÀs‚·‚éB
+// 1ã¤ã®stageï¼ˆparallelï¼‰ã‚’å®Ÿè¡Œã™ã‚‹ã€‚
 // ---------------------------------------------------------------------
 def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 {
@@ -218,24 +207,24 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 
 
 // *********************************************************************
-// ‚±‚±‚©‚ç‚ªƒGƒ“ƒgƒŠB
+// ã“ã“ã‹ã‚‰ãŒã‚¨ãƒ³ãƒˆãƒªã€‚
 // *********************************************************************
 node {
 	def yaml
 
-	// clean checkout‚·‚é
+	// clean checkoutã™ã‚‹
 	deleteDir()
 	checkout scm
 	stash name: '____initialize____'
 
 	script {
-		// İ’èƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş
-		// Pipeline Utility Steps Plugin‚ÌŠÖ”‚ğg‚¤
+		// è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€
+		// Pipeline Utility Steps Pluginã®é–¢æ•°ã‚’ä½¿ã†
 		yaml = readYaml(file: 'config.yml')
 
 		timestamps {
-			// ŠÂ‹«•Ï”’è‹`‚ª‚ ‚éê‡‚ÍŠÂ‹«•Ï”‚ğİ’è‚·‚éB
-			// ã‘‚«—p‚ÌŠÂ‹«•Ï”’è‹`‚ª‚ ‚ê‚Îİ’è‚·‚éB
+			// ç’°å¢ƒå¤‰æ•°å®šç¾©ãŒã‚ã‚‹å ´åˆã¯ç’°å¢ƒå¤‰æ•°ã‚’è¨­å®šã™ã‚‹ã€‚
+			// ä¸Šæ›¸ãç”¨ã®ç’°å¢ƒå¤‰æ•°å®šç¾©ãŒã‚ã‚Œã°è¨­å®šã™ã‚‹ã€‚
 			def __env = []
 			def __stages = []
 
@@ -249,9 +238,9 @@ node {
 				}
 			}
 
-			// jobˆê——‚Ìã‘‚«İ’è‚ª‚ ‚éê‡‚Íã‘‚«‚·‚éB
-			// params.stages‚ÍAŠÂ‹«•Ï”İ’è‚à“¯‚É“ü‚Á‚Ä‚­‚é‚Ì‚ÅA
-			// •ª—£‚µ‚ÄƒŠƒXƒg‚É‚·‚éB
+			// jobä¸€è¦§ã®ä¸Šæ›¸ãè¨­å®šãŒã‚ã‚‹å ´åˆã¯ä¸Šæ›¸ãã™ã‚‹ã€‚
+			// params.stagesã¯ã€ç’°å¢ƒå¤‰æ•°è¨­å®šã‚‚åŒæ™‚ã«å…¥ã£ã¦ãã‚‹ã®ã§ã€
+			// åˆ†é›¢ã—ã¦ãƒªã‚¹ãƒˆã«ã™ã‚‹ã€‚
 			if (yaml.stages != null) {
 				__stages = yaml.stages
 			}
@@ -272,12 +261,12 @@ node {
 
 		}
 
-		// junit‚ğÀs‚·‚é
+		// junitã‚’å®Ÿè¡Œã™ã‚‹
 		if (yaml.config.junit != null) {
 			junit yaml.config.junit
 		}
 
-		// archiveArtifacts‚ğg‚Á‚Ä¬‰Ê•¨‚ğ•Û‘¶‚·‚é
+		// archiveArtifactsã‚’ä½¿ã£ã¦æˆæœç‰©ã‚’ä¿å­˜ã™ã‚‹
 		if (yaml.config.archiveArtifacts != null) {
 			archiveArtifacts yaml.config.archiveArtifacts
 		}
