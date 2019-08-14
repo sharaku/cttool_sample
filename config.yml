@@ -50,6 +50,7 @@ stage:
      - sh: which gcc
      - sh: sh ./mkresult result/junit1.xml
      - echo: "echo job1"
+    result: 'result/*.xml'
 
   para_job1:
     parallel:
