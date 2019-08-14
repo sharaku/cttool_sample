@@ -1,6 +1,5 @@
 #!groovy
 
-
 // ---------------------------------------------------------------------
 // スクリプトを実行する。
 // ---------------------------------------------------------------------
@@ -19,14 +18,28 @@ def __exec_script(def script)
 	}
 }
 
-def __exec_script_withEnv(def env, def script)
+def __exec_script_withEnv(def env, def stage_param)
 {
+	// ENV設定に従って設定を行う。
 	if (env != "") {
 		withEnv(env) {
-			__exec_script(script)
+			__exec_script(stage_param.script)
 		}
 	} else {
-		__exec_script(script)
+		__exec_script(stage_param.script)
+	}
+
+	// stashはそのまま渡す。
+	// よって、name, excludesを設定すること。
+	if (stage_param.stash != null) {
+		stage_param.stash.each { __stash ->
+			stash __stash
+		}
+	}
+
+	// 結果をstashする。
+	if (stage_param.result != null) {
+		stash allowEmpty: true, includes: stage_param.result, name: "____result_${stage_name}____"
 	}
 }
 
@@ -70,34 +83,10 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 
 			if (stage_param.docker != null) {
 				withDockerContainer(stage_param.docker) {
-					__exec_script_withEnv(__env, stage_param.script)
-					// stashはそのまま渡す。
-					// よって、name, excludesを設定すること。
-					if (stage_param.stash != null) {
-						stage_param.stash.each { __stash ->
-							stash __stash
-						}
-					}
-
-					// 結果をstashする。
-					if (stage_param.result != null) {
-						stash allowEmpty: true, includes: stage_param.result, name: "____result_${stage_name}____"
-					}
+					__exec_script_withEnv(__env, stage_param)
 				}
 			} else {
-				__exec_script_withEnv(__env, stage_param.script)
-				// stashはそのまま渡す。
-				// よって、name, excludesを設定すること。
-				if (stage_param.stash != null) {
-					stage_param.stash.each { __stash ->
-						stash __stash
-					}
-				}
-
-				// 結果をstashする。
-				if (stage_param.result != null) {
-					stash allowEmpty: true, includes: stage_param.result, name: "____result_${stage_name}____"
-				}
+				__exec_script_withEnv(__env, stage_param)
 			}
 		}
 
