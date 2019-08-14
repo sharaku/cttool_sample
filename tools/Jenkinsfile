@@ -59,6 +59,7 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 				__env += line
 			}
 
+docker.image('sharaku/cross-build').withRun() {
 			if (__env != "") {
 				withEnv(__env) {
 					__exec_script(stage_param.script)
@@ -66,6 +67,7 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 			} else {
 				__exec_script(stage_param.script)
 			}
+}
 		}
 
 		// stashはそのまま渡す。
