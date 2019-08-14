@@ -22,6 +22,7 @@ stage:
      - sh: ls -al
      - sh: pwd
      - sh: sh ./mkresult result/junit1.xml
+     - sh: which gcc
      - echo: "echo job1"
 
     env:
