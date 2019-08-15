@@ -73,6 +73,7 @@ stage:
      - docker:
         command: exec
         image: sharaku/cross-build
+        script:
          - sh: pwd
          - sh: which gcc
 
