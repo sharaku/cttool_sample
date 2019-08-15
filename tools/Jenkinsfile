@@ -39,8 +39,14 @@ def __exec_docker(def docker_param)
 		// startコマンドであった場合、dockerコンテナを起動する。
 		// これはデータベースをテスト用に立ち上げる場合に利用される。
 		if (docker_param.script != null) {
-			docker.image(docker_param.image).withRun(docker_param.args) {
-				__exec_script(docker_param.script)
+			if (docker_param.args != null) {
+				docker.image(docker_param.image).withRun(docker_param.args) {
+					__exec_script(docker_param.script)
+				}
+			} else {
+				docker.image(docker_param.image).withRun() {
+					__exec_script(docker_param.script)
+				}
 			}
 		}
 	}
