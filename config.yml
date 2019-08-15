@@ -70,6 +70,7 @@ stage:
         image: local/ubuntu
         script:
          - sh: pwd
+         - sh: which gcc
 
   para_job1:
     parallel:
