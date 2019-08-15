@@ -70,12 +70,12 @@ stage:
         image: sharaku/cross-build
         script:
          - sh: pwd
-     - docker:
-        command: exec
-        image: sharaku/cross-build
-        script:
-         - sh: pwd
-         - sh: which gcc
+         - docker:
+            command: exec
+            image: sharaku/cross-build
+            script:
+             - sh: pwd
+             - sh: which gcc
 
   para_job1:
     parallel:
