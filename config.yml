@@ -70,6 +70,10 @@ stage:
         image: sharaku/cross-build
         script:
          - sh: pwd
+     - docker:
+        command: run
+        image: sharaku/cross-build
+         - sh: pwd
          - sh: which gcc
 
   para_job1:
