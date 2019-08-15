@@ -55,6 +55,17 @@ stage:
      - echo: "echo job1"
     result: 'result/*.xml'
 
+  docker-build:
+    node: docker
+    env:
+     - env_C="C"
+     - env_D="D"
+    script:
+     - docker:
+        command: build
+        tag: local/ubuntu
+        Dockerfile: Dockerfile
+
   para_job1:
     parallel:
      - job1

@@ -1,7 +1,12 @@
 #!groovy
 
+// 必須プラグイン
+//   Pipeline Utility Steps
+//   Docker Pipeline
+
 // ---------------------------------------------------------------------
 // スクリプトを実行する。
+// def script	: 実行するスクリプト一覧 (map)
 // ---------------------------------------------------------------------
 def __exec_script(def script)
 {
@@ -13,11 +18,31 @@ def __exec_script(def script)
 				echo __script.echo
 			} else if (__script.powershell  != null) {
 				powershell __script.sh
+			} else if (__script.docker  != null) {
+				__exec_docker __script.docker
 			}
 		}
 	}
 }
 
+def __exec_docker(def docker_param)
+{
+	// docker buildを行う
+	if (docker_param.command == "build") {
+		if (docker_param.Dockerfile != null) {
+			def param = "-f ${docker_param.Dockerfile} ."
+			docker.build(docker_param.tag, param)
+		} else {
+			docker.build(docker_param.tag)
+		}
+	}
+}
+
+// ---------------------------------------------------------------------
+// スクリプトを実行する。(環境変数指定があれば環境変数を設定する)
+// def env		: 実行するスクリプトの環境変数 (list)
+// def stage_param	: 実行するjobのパラメータ (map)
+// ---------------------------------------------------------------------
 def __exec_script_withEnv(def env, def stage_param)
 {
 	// ENV設定に従って設定を行う。
@@ -32,6 +57,9 @@ def __exec_script_withEnv(def env, def stage_param)
 
 // ---------------------------------------------------------------------
 // 1つのstageを実行する。
+// def stage_name	: 実行するjobのname (string)
+// def ow_env		: 実行するスクリプトの上書き用環境変数 (list)
+// def stage_param	: 実行するjobのパラメータ (map)
 // ---------------------------------------------------------------------
 def __exec_scripts(def stage_name, def ow_env, def stage_param)
 {
@@ -68,6 +96,8 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 				__env += line
 			}
 
+			// docker設定があれば、dockerを使用する。
+			// Docker Pipelineの関数を使う
 			if (stage_param.docker != null) {
 				withDockerContainer(stage_param.docker) {
 					__exec_script_withEnv(__env, stage_param)
@@ -96,6 +126,9 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 
 // ---------------------------------------------------------------------
 // 1つのスクリプトの塊を実行する。
+// def stage_name	: 実行するjobのname (string)
+// def ow_env		: 実行するスクリプトの上書き用環境変数 (list)
+// def stage_param	: 実行するjobのパラメータ (map)
 // ---------------------------------------------------------------------
 def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 {
@@ -106,6 +139,9 @@ def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 
 // ---------------------------------------------------------------------
 // 1つのスクリプトの塊を実行する。
+// def stage_name	: 実行するjobのname (string)
+// def ow_env		: 実行するスクリプトの上書き用環境変数 (list)
+// def stage_param	: 実行するjobのパラメータ (map)
 // ---------------------------------------------------------------------
 def __exec_subproject(def stage_name, def ow_env, def stage_param)
 {
