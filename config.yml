@@ -67,7 +67,7 @@ stage:
         Dockerfile: Dockerfile
      - docker:
         command: start
-        image: local/ubuntu
+        image: sharaku/cross-build
         script:
          - sh: pwd
          - sh: which gcc
