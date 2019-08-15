@@ -65,6 +65,11 @@ stage:
         command: build
         tag: local/ubuntu
         Dockerfile: Dockerfile
+     - docker:
+        command: start
+        image: local/ubuntu
+        script:
+         - sh: pwd
 
   para_job1:
     parallel:
