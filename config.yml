@@ -66,12 +66,12 @@ stage:
         tag: local/ubuntu
         Dockerfile: Dockerfile
      - docker:
-        command: start
+        command: run
         image: sharaku/cross-build
         script:
          - sh: pwd
      - docker:
-        command: run
+        command: exec
         image: sharaku/cross-build
          - sh: pwd
          - sh: which gcc
