@@ -143,8 +143,8 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 	}
 
 	// もし必須ではない場合は、nodeの存在をチェック
-	if (stage_param.required != null && stage_param.required == 'no') {
-		echo "stage_param.required = no"
+	if (stage_param.required != null && stage_param.required == 'false') {
+		echo "stage_param.required = false"
 		_nodelist = nodesByLabel _node
 		echo "nodesByLabel -> ${_nodelist}"
 		if (_nodelist.size() == 0) {
