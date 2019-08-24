@@ -229,10 +229,11 @@ def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 def __exec_subproject(def stage_name, def ow_env, def stage_param)
 {
 	def __env = []
+	def __yaml = yaml_filename
 
 	// サブプロジェクトの設定ファイルを読み込む
 	// Pipeline Utility Steps Pluginの関数を使う
-	yaml = readYaml(file: "${stage_param.subproject}/${yaml_filename}")
+	yaml = readYaml(file: "${stage_param.subproject}/${__yaml}")
 
 	if (yaml.config.env != null) {
 		__env = yaml.config.env
