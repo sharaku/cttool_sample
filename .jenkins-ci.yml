@@ -50,7 +50,7 @@ stage:
 
   job4:
     node: ZZZZZ
-    required: yes
+    required: no
     script:
      - sh: echo "job1 env_A=${env_A} env_C=${env_C} env_D=${env_D}"
      - sh: ls -al
