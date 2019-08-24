@@ -58,6 +58,10 @@ def __exec_script(def script)
 			} else if (__script.error  != null) {
 				// エラーさせる
 				error __script.error
+			} else if (__script.failure  != null) {
+				// エラーさせる
+				echo __script.failure
+				currentBuild.result = 'FAILURE'
 			}
 		}
 	}

@@ -52,6 +52,8 @@ stage:
            artifacts: 'result/*'
       failure:
        - sh: echo "job2 post failure"
+       - failure: "error"
+
     result: 'result/*.xml'
 
   job3:
