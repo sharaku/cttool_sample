@@ -142,23 +142,15 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 		_node = stage_param.node
 	}
 
-	try {
-		_nodelist = nodesByLabel _node
-		// nodesByLabelが例外を吐かない場合の対策
-		if (_nodelist.size() == 0) {
-			// もし必須ではない場合は、nodeの存在をチェック
-			if (stage_param.required != null && stage_param.required == false) {
-				return 1
-			} else {
-				echo "Could not find any nodes with '${_node}' label"
-				currentBuild.result = 'FAILURE'
-				return 1
-			}
+	_nodelist = nodesByLabel _node
+	if (_nodelist.size() == 0) {
+		// もし必須ではない場合は、nodeの存在をチェック
+		if (stage_param.required != null && stage_param.required == false) {
+			return 1
+		} else {
+			currentBuild.result = 'FAILURE'
+			return 1
 		}
-	} catch (exc) {
-		// nodesByLabelがエラーする（ノードがない）であれば、エラーさせるのみ。
-		currentBuild.result = 'FAILURE'
-		return 1
 	}
 
 	node (_node) {
@@ -209,19 +201,6 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 		}
 	}
 	return 0
-}
-
-
-
-// ---------------------------------------------------------------------
-// 1つのスクリプトの塊を実行する。
-// def stage_name	: 実行するjobのname (string)
-// def ow_env		: 実行するスクリプトの上書き用環境変数 (list)
-// def stage_param	: 実行するjobのパラメータ (map)
-// ---------------------------------------------------------------------
-def __exec_single_stage(def stage_name, def ow_env, def stage_param)
-{
-	return __exec_scripts(stage_name, ow_env, stage_param)
 }
 
 
@@ -294,7 +273,7 @@ def __exec_stages(def stages, def stage_list)
 					} else if (stage_list[__job].subproject != null) {
 						__exec_subproject(__job, __ow_env, stage_list[__job])
 					} else {
-						def res = __exec_single_stage(__job, __ow_env, stage_list[__job])
+						def res = __exec_scripts(__job, __ow_env, stage_list[__job])
 						if (res == 0) {
 							if (stage_list[__job].result != null) {
 								unstash "____result_${__job}____"
@@ -324,7 +303,7 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 				} else if (stage_list[__line].subproject != null) {
 					__exec_subproject(__line, ow_env, stage_list[__line])
 				} else {
-					__exec_single_stage(__line, ow_env, stage_list[__line])
+					__exec_scripts(__line, ow_env, stage_list[__line])
 				}
 			}
 		}
