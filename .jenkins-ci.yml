@@ -34,10 +34,23 @@ stage:
      - sh: pwd
      - sh: sh ./mkresult result/junit2.xml
      - sh: echo "job2 env_C=${env_C} env_D=${env_D}"
+    post:
+      always:
+       - sh: echo "job2 post always"
+      success:
+       - sh: echo "job2 post success"
+       - archiveArtifacts:
+           artifacts: 'result/*'
+      failure:
+       - sh: echo "job2 post failure"
     result: 'result/*.xml'
 
   job3:
     subproject: testset/sample
+
+  job4:
+    node: ZZZZZ
+    required: no
 
   docker-job:
     node: docker
@@ -82,6 +95,13 @@ stage:
      - job1
      - job2
      - job3
+    post:
+      always:
+       - sh: echo "para_job1 post always"
+      success:
+       - sh: echo "para_job1 post success"
+      failure:
+       - sh: echo "para_job1 post failure"
 
   para_job2:
     parallel:

@@ -37,13 +37,29 @@ def __exec_script(def script)
 	if (script != null) {
 		script.each { __script ->
 			if (__script.sh != null) {
+				// shellを実行する
 				sh __script.sh
 			} else if (__script.echo  != null) {
+				// echoを実行する
 				echo __script.echo
 			} else if (__script.powershell  != null) {
+				// powershellを実行する
 				powershell __script.sh
 			} else if (__script.docker  != null) {
+				// dockerを実行する
 				__exec_docker __script.docker
+			} else if (__script.archiveArtifacts  != null) {
+				// 成果物をアーカイブする
+				archiveArtifacts __script.archiveArtifacts
+			} else if (__script.stash  != null) {
+				// 成果物をstashする
+				stash __script.stash
+			} else if (__script.unstash  != null) {
+				// 成果物をunstashする
+				unstash __script.stash
+			} else if (__script.error  != null) {
+				// エラーさせる
+				error __script.error
 			}
 		}
 	}
@@ -93,6 +109,31 @@ def __exec_docker(def docker_param)
 }
 
 // ---------------------------------------------------------------------
+// スクリプトを実行する。(また、post処理も実施する)
+// def env		: 実行するスクリプトの環境変数 (list)
+// def stage_param	: 実行するjobのパラメータ (map)
+// ---------------------------------------------------------------------
+def __exec_script_and_post(def env, def stage_param)
+{
+	try {
+		__exec_script(stage_param.script)
+		if (stage_param.post != null && stage_param.post.success != null) {
+			__exec_script(stage_param.post.success)
+		}
+	} catch (exc) {
+		if (stage_param.post != null && stage_param.post.failure != null) {
+			__exec_script(stage_param.post.failure)
+		} else {
+			currentBuild.result = 'FAILURE'
+		}
+	} finally {
+		if (stage_param.post != null && stage_param.post.always != null) {
+			__exec_script(stage_param.post.always)
+		}
+	}
+}
+
+// ---------------------------------------------------------------------
 // スクリプトを実行する。(環境変数指定があれば環境変数を設定する)
 // def env		: 実行するスクリプトの環境変数 (list)
 // def stage_param	: 実行するjobのパラメータ (map)
@@ -102,10 +143,10 @@ def __exec_script_withEnv(def env, def stage_param)
 	// ENV設定に従って設定を行う。
 	if (env != "") {
 		withEnv(env) {
-			__exec_script(stage_param.script)
+			__exec_script_and_post(stage_param.script)
 		}
 	} else {
-		__exec_script(stage_param.script)
+		__exec_script_and_post(stage_param.script)
 	}
 }
 
@@ -118,6 +159,7 @@ def __exec_script_withEnv(def env, def stage_param)
 def __exec_scripts(def stage_name, def ow_env, def stage_param)
 {
 	def _node
+	def _nodelist = []
 
 	// 使用するnodeを決定する。
 	// nodeが指定されていない場合は、masterを使用する。
@@ -127,7 +169,21 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 		_node = stage_param.node
 	}
 
+	// もし必須ではない場合は、nodeの存在をチェック
+	if (stage_param.required != null && stage_param.required == 'no') {
+		_nodelist = nodesByLabel _node
+		if (_nodelist.size() == 0) {
+			// 対象のノードはない。
+			// 結果をstashする。
+			if (stage_param.result != null) {
+				stash allowEmpty: true, includes: stage_param.result, name: "____result_${stage_name}____"
+			}
+		}
+	}
+
 	node (_node) {
+		def __env = ""
+
 		// unstashが設定されている場合は全部実行する。
 		deleteDir()
 		if (stage_param.unstash != null) {
@@ -293,7 +349,23 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 	}
 
 	stage(stage_name) {
-		parallel(__parallel)
+		// パラレルを実行する。post処理が必要であれば処理する
+		try {
+			parallel(__parallel)
+			if (stage_param.post != null && stage_param.post.success != null) {
+				__exec_script(stage_param.post.success)
+			}
+		} catch (exc) {
+			if (stage_param.post != null && stage_param.post.failure != null) {
+				__exec_script(stage_param.post.failure)
+			} else {
+				currentBuild.result = 'FAILURE'
+			}
+		} finally {
+			if (stage_param.post != null && stage_param.post.always != null) {
+				__exec_script(stage_param.post.always)
+			}
+		}
 	}
 
 	stage_param.parallel.each { __line ->
