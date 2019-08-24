@@ -156,6 +156,7 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 			return
 		}
 	}
+	echo "_node = ${_node}"
 
 	node (_node) {
 		// unstashが設定されている場合は全部実行する。
