@@ -42,6 +42,7 @@ stage:
      - sh: pwd
      - sh: sh ./mkresult result/junit2.xml
      - sh: echo "job2 env_C=${env_C} env_D=${env_D}"
+     - error: "test error."
     post:
       always:
        - sh: echo "job2 post always"
