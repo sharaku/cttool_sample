@@ -196,7 +196,6 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 
 		// スクリプトがなければ何もしない。
 		if (stage_param.script != null) {
-			def __env = ""
 			// 環境変数定義があれば、環境変数を設定してから、
 			// shellを実行していく
 			if (stage_param.env != null) {
