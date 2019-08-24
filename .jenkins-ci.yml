@@ -20,7 +20,15 @@ stage:
      - sh: pwd
      - sh: sh ./mkresult result/junit1.xml
      - echo: "echo job1"
-
+    post:
+      always:
+       - sh: echo "job1 post always"
+      success:
+       - sh: echo "job1 post success"
+       - archiveArtifacts:
+           artifacts: 'result/*'
+      failure:
+       - sh: echo "job1 post failure"
     env:
      - env_C="C"
      - env_D="D"
