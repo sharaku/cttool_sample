@@ -146,8 +146,10 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 	if (_nodelist.size() == 0) {
 		// もし必須ではない場合は、nodeの存在をチェック
 		if (stage_param.required != null && stage_param.required == false) {
+			echo "SKIP '${stage_param.name}' stage."
 			return 1
 		} else {
+			echo "FAILURE '${stage_param.name}' stage."
 			currentBuild.result = 'FAILURE'
 			return 1
 		}
