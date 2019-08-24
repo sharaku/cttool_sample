@@ -142,16 +142,23 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 		_node = stage_param.node
 	}
 
-	_nodelist = nodesByLabel _node
-	if (_nodelist.size() == 0) {
-		// もし必須ではない場合は、nodeの存在をチェック
-		if (stage_param.required != null && stage_param.required == false) {
-			return 1
-		} else {
-			
-			currentBuild.result = 'FAILURE'
-			return 1
+	try {
+		_nodelist = nodesByLabel _node
+		// nodesByLabelが例外を吐かない場合の対策
+		if (_nodelist.size() == 0) {
+			// もし必須ではない場合は、nodeの存在をチェック
+			if (stage_param.required != null && stage_param.required == false) {
+				return 1
+			} else {
+				echo "Could not find any nodes with '${_node}' label"
+				currentBuild.result = 'FAILURE'
+				return 1
+			}
 		}
+	} catch (exc) {
+		// nodesByLabelがエラーする（ノードがない）であれば、エラーさせるのみ。
+		currentBuild.result = 'FAILURE'
+		return 1
 	}
 
 	node (_node) {
