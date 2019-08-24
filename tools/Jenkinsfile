@@ -142,16 +142,15 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 		_node = stage_param.node
 	}
 
-	// もし必須ではない場合は、nodeの存在をチェック
-	if (stage_param.required != null && stage_param.required == false) {
-		_nodelist = nodesByLabel _node
-		if (_nodelist.size() == 0) {
-			// 対象のノードはない。
-			// 結果をstashする。
-			if (stage_param.result != null) {
-				stash allowEmpty: true, includes: stage_param.result, name: "____result_${stage_name}____"
-			}
-			return
+	_nodelist = nodesByLabel _node
+	if (_nodelist.size() == 0) {
+		// もし必須ではない場合は、nodeの存在をチェック
+		if (stage_param.required != null && stage_param.required == false) {
+			return 1
+		} else {
+			
+			currentBuild.result = 'FAILURE'
+			return 1
 		}
 	}
 
@@ -202,6 +201,7 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 			stash allowEmpty: true, includes: stage_param.result, name: "____result_${stage_name}____"
 		}
 	}
+	return 0
 }
 
 
@@ -214,7 +214,7 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 // ---------------------------------------------------------------------
 def __exec_single_stage(def stage_name, def ow_env, def stage_param)
 {
-	__exec_scripts(stage_name, ow_env, stage_param)
+	return __exec_scripts(stage_name, ow_env, stage_param)
 }
 
 
@@ -287,9 +287,11 @@ def __exec_stages(def stages, def stage_list)
 					} else if (stage_list[__job].subproject != null) {
 						__exec_subproject(__job, __ow_env, stage_list[__job])
 					} else {
-						__exec_single_stage(__job, __ow_env, stage_list[__job])
-						if (stage_list[__job].result != null) {
-							unstash "____result_${__job}____"
+						def res = __exec_single_stage(__job, __ow_env, stage_list[__job])
+						if (res == 0) {
+							if (stage_list[__job].result != null) {
+								unstash "____result_${__job}____"
+							}
 						}
 					}
 				}
