@@ -116,10 +116,40 @@ def __exec_script_withEnv(def env, def stage_param)
 	// ENV設定に従って設定を行う。
 	if (env != "") {
 		withEnv(env) {
-			__exec_script(stage_param.script)
+			try {
+				__exec_script(stage_param.script)
+				if (stage_param.post != null && stage_param.post.success != null) {
+					__exec_script(stage_param.post.success)
+				}
+			} catch (exc) {
+				if (stage_param.post != null && stage_param.post.failure != null) {
+					__exec_script(stage_param.post.failure)
+				} else {
+					currentBuild.result = 'FAILURE'
+				}
+			} finally {
+				if (stage_param.post != null && stage_param.post.always != null) {
+					__exec_script(stage_param.post.always)
+				}
+			}
 		}
 	} else {
-		__exec_script(stage_param.script)
+		try {
+			__exec_script(stage_param.script)
+			if (stage_param.post != null && stage_param.post.success != null) {
+				__exec_script(stage_param.post.success)
+			}
+		} catch (exc) {
+			if (stage_param.post != null && stage_param.post.failure != null) {
+				__exec_script(stage_param.post.failure)
+			} else {
+				currentBuild.result = 'FAILURE'
+			}
+		} finally {
+			if (stage_param.post != null && stage_param.post.always != null) {
+				__exec_script(stage_param.post.always)
+			}
+		}
 	}
 }
 
