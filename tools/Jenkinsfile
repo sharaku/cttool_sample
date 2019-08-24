@@ -26,7 +26,7 @@
 //   Pipeline Utility Steps
 //   Docker Pipeline
 
-final yaml_filename = ".jenkins-ci.yml"
+final def yaml_filename = ".jenkins-ci.yml"
 
 // ---------------------------------------------------------------------
 // スクリプトを実行する。
