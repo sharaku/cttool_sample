@@ -144,9 +144,7 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 
 	// もし必須ではない場合は、nodeの存在をチェック
 	if (stage_param.required != null && stage_param.required == false) {
-		echo "stage_param.required = false"
 		_nodelist = nodesByLabel _node
-		echo "nodesByLabel -> ${_nodelist}"
 		if (_nodelist.size() == 0) {
 			// 対象のノードはない。
 			// 結果をstashする。
@@ -156,8 +154,6 @@ def __exec_scripts(def stage_name, def ow_env, def stage_param)
 			return
 		}
 	}
-	echo "stage_param = ${stage_param}"
-	echo "_node = ${_node}"
 
 	node (_node) {
 		// unstashが設定されている場合は全部実行する。
