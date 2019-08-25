@@ -376,7 +376,6 @@ node {
 	def yaml
 
 	// clean checkoutする
-	deleteDir()
 	checkout scm
 	stash name: '____initialize____'
 
