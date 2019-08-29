@@ -385,15 +385,32 @@ def __after(def yaml)
 		junit yaml.config.junit
 	}
 
+	// --------------------------------------
+	// Warnings Next Generation プラグイン
+	// --------------------------------------
+	// cmakeを実行する
+	if (yaml.config.cmake != null) {
+		recordIssues(tools: [cmake( yaml.config.cmake )])
+	}
 	// cppcheckを実行する
 	if (yaml.config.cppcheck != null) {
 		recordIssues(tools: [cppCheck( yaml.config.cppcheck )])
 	}
-
-
-	// archiveArtifactsを使って成果物を保存する
-	if (yaml.config.archiveArtifacts != null) {
-		archiveArtifacts yaml.config.archiveArtifacts
+	// cpplintを実行する
+	if (yaml.config.cpplint != null) {
+		recordIssues(tools: [cppLint( yaml.config.cpplint )])
+	}
+	// doxygenを実行する
+	if (yaml.config.doxygen != null) {
+		recordIssues(tools: [doxygen( yaml.config.doxygen )])
+	}
+	// gcc3を実行する
+	if (yaml.config.gcc3 != null) {
+		recordIssues(tools: [gcc3( yaml.config.gcc3 )])
+	}
+	// gccを実行する
+	if (yaml.config.gcc != null) {
+		recordIssues(tools: [gcc( yaml.config.gcc )])
 	}
 }
 
@@ -454,6 +471,11 @@ node {
 		}
 
 		__after(yaml)
+
+		// archiveArtifactsを使って成果物を保存する
+		if (yaml.config.archiveArtifacts != null) {
+			archiveArtifacts yaml.config.archiveArtifacts
+		}
 	}
 }
 
