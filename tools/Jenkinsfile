@@ -389,6 +389,7 @@ def __after(def yaml)
 	if (yaml.config.cppcheck != null) {
 		__tool_one = 'cppCheck(' + yaml.config.cppcheck + ')'
 		echo __tool_one
+		recordIssues(tools: [ __tool_one ])
 	}
 
 
