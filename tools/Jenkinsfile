@@ -385,12 +385,9 @@ def __after(def yaml)
 		junit yaml.config.junit
 	}
 
-	// junitを実行する
+	// cppcheckを実行する
 	if (yaml.config.cppcheck != null) {
-		__tool_one = 'cppCheck(' + yaml.config.cppcheck + ')'
-		__tools['tools'] = __tool_one
-		echo __tools
-		recordIssues(__tools)
+		recordIssues('tools: [cppCheck(' + yaml.config.cppcheck + ')]')
 	}
 
 
