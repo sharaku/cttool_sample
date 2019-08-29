@@ -378,6 +378,7 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 def __after(def yaml)
 {
 	def __tools = []
+	def __tool_one = ""
 
 	// junitを実行する
 	if (yaml.config.junit != null) {
@@ -386,7 +387,8 @@ def __after(def yaml)
 
 	// junitを実行する
 	if (yaml.config.cppcheck != null) {
-		__tools += 'cppCheck(' + yaml.config.cppcheck + ')'
+		__tool_one = 'cppCheck(' + yaml.config.cppcheck + ')'
+		__tools += __tool_one
 	}
 
 	echo __tools
