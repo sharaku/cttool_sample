@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <results>
-    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/debug/src/log.c" line="70" id="unusedFunction" severity="style" msg="The function &apos;__log_infolog_internal_log64_32&apos; is never used."/>
-    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/debug/src/log.c" line="85" id="unusedFunction" severity="style" msg="The function &apos;__log_infolog_internal_log64_64&apos; is never used."/>
-    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/debug/src/log.c" line="57" id="unusedFunction" severity="style" msg="The function &apos;__log_trace_internal&apos; is never used."/>
+    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/game/wslg/example/tui.hpp" line="48" id="variableScope" severity="style" msg="The scope of the variable &apos;key&apos; can be reduced."/>
+    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/game/wslg/example/tui.hpp" line="97" id="variableScope" severity="style" msg="The scope of the variable &apos;c&apos; can be reduced."/>
+    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/game/wslg/example/tui.hpp" line="47" id="unusedVariable" severity="style" msg="Unused variable: x"/>
+    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/game/wslg/example/tui.hpp" line="47" id="unusedVariable" severity="style" msg="Unused variable: y"/>
+    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/game/wslg/example/chess_sample.cpp" line="228" id="unusedVariable" severity="style" msg="Unused variable: d"/>
+    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/game/wslg/example/chess_sample.cpp" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;chess_sample::__mvtgt_x&apos; is not initialized in the constructor."/>
+    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/game/wslg/example/chess_sample.cpp" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;chess_sample::__mvtgt_y&apos; is not initialized in the constructor."/>
+    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/game/wslg/example/chess_sample.cpp" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;chess_sample::__cursol_x&apos; is not initialized in the constructor."/>
+    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/game/wslg/example/chess_sample.cpp" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;chess_sample::__cursol_y&apos; is not initialized in the constructor."/>
     <error id="missingIncludeSystem" severity="style" msg="Cppcheck cannot find all the include files (use --check-config for details)"/>
 </results>
