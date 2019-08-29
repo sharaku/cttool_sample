@@ -388,10 +388,9 @@ def __after(def yaml)
 	// junitを実行する
 	if (yaml.config.cppcheck != null) {
 		__tool_one = 'cppCheck(' + yaml.config.cppcheck + ')'
-		__tools += __tool_one
+		echo __tool_one
 	}
 
-	echo __tools
 
 	// archiveArtifactsを使って成果物を保存する
 	if (yaml.config.archiveArtifacts != null) {
