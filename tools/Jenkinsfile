@@ -453,7 +453,7 @@ node {
 
 		}
 
-		__after()
+		__after(yaml)
 	}
 }
 
