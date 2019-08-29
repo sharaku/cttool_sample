@@ -7,7 +7,7 @@ config:
     keepLongStdio: true
     testResults: 'result/*.xml'
   cppcheck:
-    pattern: 'cppcheck.debug.xml'
+    pattern: 'cppcheck.*.xml'
   archiveArtifacts:
     artifacts: 'result/*'
 
