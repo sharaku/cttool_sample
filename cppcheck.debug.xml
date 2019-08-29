@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results>
+    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/debug/src/log.c" line="70" id="unusedFunction" severity="style" msg="The function &apos;__log_infolog_internal_log64_32&apos; is never used."/>
+    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/debug/src/log.c" line="85" id="unusedFunction" severity="style" msg="The function &apos;__log_infolog_internal_log64_64&apos; is never used."/>
+    <error file="/var/jenkins_home/workspace/libsharaku-ci@2/libs/debug/src/log.c" line="57" id="unusedFunction" severity="style" msg="The function &apos;__log_trace_internal&apos; is never used."/>
+    <error id="missingIncludeSystem" severity="style" msg="Cppcheck cannot find all the include files (use --check-config for details)"/>
+</results>

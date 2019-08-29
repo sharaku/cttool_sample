@@ -6,6 +6,8 @@ config:
     allowEmptyResults: true
     keepLongStdio: true
     testResults: 'result/*.xml'
+  cppcheck:
+    pattern: 'cppcheck.debug.xml'
   archiveArtifacts:
     artifacts: 'result/*'
 
