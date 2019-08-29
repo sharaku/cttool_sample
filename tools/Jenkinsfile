@@ -387,7 +387,8 @@ def __after(def yaml)
 
 	// cppcheckを実行する
 	if (yaml.config.cppcheck != null) {
-		recordIssues('tools: [cppCheck(' + yaml.config.cppcheck + ')]')
+		recordIssues(tools: [cppCheck(pattern: 'cppcheck.debug.xml')])
+		//recordIssues('tools: [cppCheck(' + yaml.config.cppcheck + ')]')
 	}
 
 
