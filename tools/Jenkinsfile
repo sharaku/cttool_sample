@@ -375,42 +375,46 @@ def __exec_parallel(def stage_name, def stage_list, def ow_env, def stage_param)
 // ---------------------------------------------------------------------
 // 実行後の集計処理
 // ---------------------------------------------------------------------
-def __after(def yaml)
+def __issue(def yaml)
 {
 	def __tools = [:]
 	def __tool_one = ""
 
+	if (yaml.config.issue == null) {
+		return
+	}
+
 	// junitを実行する
-	if (yaml.config.junit != null) {
-		junit yaml.config.junit
+	if (yaml.config.issue.junit != null) {
+		junit yaml.config.issue.junit
 	}
 
 	// --------------------------------------
 	// Warnings Next Generation プラグイン
 	// --------------------------------------
 	// cmakeを実行する
-	if (yaml.config.cmake != null) {
-		recordIssues(tools: [cmake( yaml.config.cmake )])
+	if (yaml.config.issue.cmake != null) {
+		recordIssues(aggregatingResults: true, tools: [cmake( yaml.config.issue.cmake )])
 	}
 	// cppcheckを実行する
-	if (yaml.config.cppcheck != null) {
-		recordIssues(tools: [cppCheck( yaml.config.cppcheck )])
+	if (yaml.config.issue.cppcheck != null) {
+		recordIssues(aggregatingResults: true, tools: [cppCheck( yaml.config.issue.cppcheck )])
 	}
 	// cpplintを実行する
-	if (yaml.config.cpplint != null) {
-		recordIssues(tools: [cppLint( yaml.config.cpplint )])
+	if (yaml.config.issue.cpplint != null) {
+		recordIssues(aggregatingResults: true, tools: [cppLint( yaml.config.issue.cpplint )])
 	}
 	// doxygenを実行する
-	if (yaml.config.doxygen != null) {
-		recordIssues(tools: [doxygen( yaml.config.doxygen )])
+	if (yaml.config.issue.doxygen != null) {
+		recordIssues(aggregatingResults: true, tools: [doxygen( yaml.config.issue.doxygen )])
 	}
 	// gcc3を実行する
-	if (yaml.config.gcc3 != null) {
-		recordIssues(tools: [gcc3( yaml.config.gcc3 )])
+	if (yaml.config.issue.gcc3 != null) {
+		recordIssues(aggregatingResults: true, tools: [gcc3( yaml.config.issue.gcc3 )])
 	}
 	// gccを実行する
-	if (yaml.config.gcc != null) {
-		recordIssues(tools: [gcc( yaml.config.gcc )])
+	if (yaml.config.issue.gcc != null) {
+		recordIssues(aggregatingResults: true, tools: [gcc( yaml.config.issue.gcc )])
 	}
 }
 
@@ -470,7 +474,7 @@ node {
 
 		}
 
-		__after(yaml)
+		__issue(yaml)
 
 		// archiveArtifactsを使って成果物を保存する
 		if (yaml.config.archiveArtifacts != null) {

@@ -2,12 +2,14 @@ config:
   env:
     - env_A=0
     - env_B=1
-  junit:
-    allowEmptyResults: true
-    keepLongStdio: true
-    testResults: 'result/*.xml'
-  cppcheck:
-    pattern: 'cppcheck.*.xml'
+  issue:
+    junit:
+      allowEmptyResults: true
+      keepLongStdio: true
+      testResults: 'result/*.xml'
+    cppcheck:
+      reportEncoding: 'UTF-8'
+      pattern: 'cppcheck.*.xml'
   archiveArtifacts:
     artifacts: 'result/*'
 
