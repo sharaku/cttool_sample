@@ -2,7 +2,7 @@ config:
   env:
     - env_A=0
     - env_B=1
-  issue:
+  issues:
     junit:
       allowEmptyResults: true
       keepLongStdio: true
